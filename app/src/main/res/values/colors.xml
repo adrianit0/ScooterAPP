@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores de la aplicación -->
+    <color name="primaryColorLight">#ff5131</color>
+    <color name="primaryColor">#d50000</color>
+    <color name="primaryColorDark">#9b0000</color>
+
+    <color name="secundaryColorLight">#484848</color>
+    <color name="secundaryColor">#212121</color>
+    <color name="secundaryColorDark">#000000</color>
+
+    <color name="background">#dfdfdf</color>
+    <color name="surface">#ffffff</color>
+    <color name="error">#B00020</color>
+    <color name="disable">#a7a7a7</color>
+
+    <color name="onPrimary">#ffffff</color>
+    <color name="onSecundary">#ffffff</color>
+    <color name="onBackground">#6b6b6b</color>
+    <color name="onSurface">#000000</color>
+    <color name="onDisable">#000000</color>
+
+    <color name="link">#11242b</color>
+
+    <!-- Botones -->
+    <color name="buttonNormalGradient1">#212121</color>
+    <color name="buttonNormalGradient2">#262626</color>
+    <color name="buttonStroke">#212121</color>
+    <color name="buttonFocused">#2d2d2d</color>
+    <color name="buttonPressedGradient1">#1a1a1a</color>
+    <color name="buttonPressedGradient2">#151515</color>
+
+    <!-- EditText -->
+    <color name="editTextBackground">@color/surface</color>
+    <color name="editTextStroke">#e6e6e6</color>
+</resources>

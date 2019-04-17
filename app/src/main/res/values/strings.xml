@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ScooterAPP</string>
+
+    <!-- Login -->
+    <string name="emailHint">Email</string>
+    <string name="passHint">Password</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="forgot_pass"><u>¿Has olvidado tu contraseña?</u></string>
+    <string name="iniciar_sesion">Iniciar sesion</string>
+    <string name="not_account">¿Aún sin cuenta?</string>
+</resources>
