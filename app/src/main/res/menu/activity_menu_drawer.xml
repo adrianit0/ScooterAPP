@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_alquiler"
+            android:icon="@drawable/mainmenu_bike"
+            android:title="Alquilar Scooter" />
+        <item
+            android:id="@+id/nav_incidencia"
+            android:icon="@drawable/mainmenu_incidencia"
+            android:title="Realizar incidencia" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/mainmenu_help"
+            android:title="Ayuda y Contacto" />
+        <item
+            android:id="@+id/nav_bonos"
+            android:icon="@drawable/mainmenu_pack"
+            android:title="Packs y Bonos" />
+    </group>
+
+    <item>
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/mainmenu_settings"
+                android:title="Ajustes" />
+            <item
+                android:id="@+id/nav_disconnect"
+                android:icon="@drawable/mainmenu_disconnect"
+                android:title="Desconectar" />
+        </menu>
+    </item>
+
+</menu>

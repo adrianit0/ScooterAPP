@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity"
+    android:orientation="vertical">
+
+    <!-- Incluyo mi propio toolbar genérico -->
+    <include layout="@layout/default_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_account_register"
+                style="@style/textoTitulo"
+                />
+
+            <EditText
+                android:id="@+id/nameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/nombre_register"
+                android:inputType="text"
+                android:drawableStart="@drawable/accout_image" />
+
+            <EditText
+                android:id="@+id/surnameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/apellidos_register"
+                android:inputType="text"
+                android:drawableStart="@drawable/accout_image"
+                />
+
+            <EditText
+                android:id="@+id/emailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/emailHint"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/email_image" />
+
+            <EditText
+                android:id="@+id/dniRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/dni_register"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/card_image" />
+
+            <EditText
+                android:id="@+id/passRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/pass_register"
+                android:inputType="textPassword"
+                android:drawableStart="@drawable/password_image" />
+
+            <EditText
+                android:id="@+id/passAgainRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/repeat_pass"
+                android:inputType="textPassword"
+                android:drawableStart="@drawable/password_image" />
+
+            <CheckBox
+                android:id="@+id/termRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/terminos_condiciones"
+                android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                style="@style/textoContenido"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultButton"
+                android:layout_marginTop="10dp"
+                android:text="@string/registrarse"
+                android:drawableStart="@drawable/register_image"
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

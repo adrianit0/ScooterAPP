@@ -4,8 +4,28 @@
     <!-- Login -->
     <string name="emailHint">Email</string>
     <string name="passHint">Password</string>
-    <string name="registrarse">Registrarse</string>
+    <string name="registrarse">Crear una nueva cuenta</string>
     <string name="forgot_pass"><u>¿Has olvidado tu contraseña?</u></string>
     <string name="iniciar_sesion">Iniciar sesion</string>
     <string name="not_account">¿Aún sin cuenta?</string>
+    <!-- Register -->
+    <string name="terminos_condiciones">He leido y acepto los términos y condiciones.</string>
+    <string name="repeat_pass">Repite contraseña</string>
+    <string name="pass_register">Contraseña</string>
+    <string name="dni_register">dni</string>
+    <string name="apellidos_register">Apellidos</string>
+    <string name="nombre_register">Nombre</string>
+    <string name="create_account_register">Crear una nueva cuenta</string>
+
+    <!-- Navigation Strings -->
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="navigation_drawer_open">Abrir menú de navegación</string>
+    <string name="navigation_drawer_close">Cerrar menú de navegación</string>
+    <string name="nav_header_title">Pepito Perez</string>
+    <string name="nav_header_subtitle">pepito.perez@outlook.com</string>
+    <string name="nav_header_desc">Cabecera</string>
+    <string name="action_settings">Ajustes</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -5,14 +5,14 @@
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".activities.MainActivity"
     android:orientation="vertical">
 
     <!-- Incluyo mi propio toolbar genérico -->
     <include layout="@layout/default_toolbar" />
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,47 +22,46 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PLACEHOLDER DE MI LOGO"
-                android:textSize="20dp"
+                android:background="#ffe1e1"
+                android:text="PLACEHOLDER DEL LOGO"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:padding="50dp"
+                android:padding="20dp"
+                android:layout_margin="30dp"
                 android:gravity="center"/>
 
             <EditText
                 android:id="@+id/emailLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
                 android:hint="@string/emailHint"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/myedittext"
-                android:padding="10dp"
-                android:inputType="text" />
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/accout_image"/>
 
             <EditText
                 android:id="@+id/passLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
                 android:hint="@string/passHint"
-                android:background="@drawable/myedittext"
-                android:padding="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textPassword"
+                android:drawableStart="@drawable/password_image"/>
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:style="@style/DefaultButton"
-                android:layout_marginBottom="5dp"
+                style="@style/DefaultButton"
+                android:layout_marginBottom="0dp"
                 android:text="@string/iniciar_sesion"
+                android:drawableStart="@drawable/enter_image"
             />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:style="@style/Link"
+                style="@style/Link"
                 android:text="@string/forgot_pass"/>
 
             <View
@@ -77,19 +76,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:textColor="@color/onBackground"
-                android:textSize="10dp"
-                android:textStyle="bold"
-                android:text="@string/not_account"
-                android:layout_marginStart="30dp" />
+                style="@style/textoContenido"
+                android:text="@string/not_account" />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:style="@style/DefaultButton"
+                style="@style/DefaultButton"
                 android:layout_marginTop="10dp"
                 android:text="@string/registrarse"
-                />
+                android:drawableStart="@drawable/register_image" />
         </LinearLayout>
     </ScrollView>
 

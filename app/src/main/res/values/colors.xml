@@ -4,6 +4,7 @@
     <color name="primaryColorLight">#ff5131</color>
     <color name="primaryColor">#d50000</color>
     <color name="primaryColorDark">#9b0000</color>
+    <color name="fondoMenu">#ff6262</color>
 
     <color name="secundaryColorLight">#484848</color>
     <color name="secundaryColor">#212121</color>
@@ -20,6 +21,7 @@
     <color name="onSurface">#000000</color>
     <color name="onDisable">#000000</color>
 
+    <color name="titulo">#000000</color>
     <color name="link">#11242b</color>
 
     <!-- Botones -->
@@ -30,7 +32,14 @@
     <color name="buttonPressedGradient1">#1a1a1a</color>
     <color name="buttonPressedGradient2">#151515</color>
 
+    <!-- Botones menu principal -->
+
+
     <!-- EditText -->
     <color name="editTextBackground">@color/surface</color>
     <color name="editTextStroke">#e6e6e6</color>
+
+    <!-- Mantenimiento -->
+    <color name="primaryColorMantenimiento">#085400</color>
+    <color name="primaryColorDarkMantenimiento">#003615</color>
 </resources>
