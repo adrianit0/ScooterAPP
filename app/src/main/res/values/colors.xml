@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Colores de la aplicación -->
-    <color name="primaryColorLight">#ff5131</color>
-    <color name="primaryColor">#d50000</color>
-    <color name="primaryColorDark">#9b0000</color>
+    <color name="primaryColorLight">#ff6107</color>
+    <color name="primaryColor">#e9290f</color>
+    <color name="primaryColorDark">#c40018</color>
     <color name="fondoMenu">#ff6262</color>
 
-    <color name="secundaryColorLight">#484848</color>
-    <color name="secundaryColor">#212121</color>
-    <color name="secundaryColorDark">#000000</color>
+    <color name="secundaryColorLight">#504c48</color>
+    <color name="secundaryColor">#292725</color>
+    <color name="secundaryColorDark">#1a1817</color>
 
     <color name="background">#dfdfdf</color>
     <color name="surface">#ffffff</color>
@@ -25,12 +25,12 @@
     <color name="link">#11242b</color>
 
     <!-- Botones -->
-    <color name="buttonNormalGradient1">#212121</color>
-    <color name="buttonNormalGradient2">#262626</color>
-    <color name="buttonStroke">#212121</color>
-    <color name="buttonFocused">#2d2d2d</color>
-    <color name="buttonPressedGradient1">#1a1a1a</color>
-    <color name="buttonPressedGradient2">#151515</color>
+    <color name="buttonNormalGradient1">@color/secundaryColor</color>
+    <color name="buttonNormalGradient2">@color/secundaryColorDark</color>
+    <color name="buttonStroke">@color/secundaryColor</color>
+    <color name="buttonFocused">@color/secundaryColorDark</color>
+    <color name="buttonPressedGradient1">@color/secundaryColorDark</color>
+    <color name="buttonPressedGradient2">#0a0908</color>
 
     <!-- Botones menu principal -->
 
@@ -39,7 +39,7 @@
     <color name="editTextBackground">@color/surface</color>
     <color name="editTextStroke">#e6e6e6</color>
 
-    <!-- Mantenimiento -->
+    <!-- Colores de pruebas -->
     <color name="primaryColorMantenimiento">#085400</color>
     <color name="primaryColorDarkMantenimiento">#003615</color>
 </resources>

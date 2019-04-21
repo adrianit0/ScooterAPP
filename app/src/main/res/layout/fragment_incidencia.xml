@@ -3,7 +3,85 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".fragments.IncidenciaFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Informar sobre un problema"
+            style="@style/textoTitulo"
+            android:layout_marginBottom="0dp"
+            android:paddingBottom="5dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Informenos acerca de cualquier incidencia que exista con alguna de nuestras Scooters."
+            style="@style/textoContenido"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/Separador"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Scooter mal aparcada"
+                        android:drawableTop="@drawable/incidencia_bike"
+                        style="@style/IncidenciaButton"
+                        />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Scooter dañada"
+                        android:drawableTop="@drawable/incidencia_damaged"
+                        style="@style/IncidenciaButton"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Scooter no arranca/enciende"
+                        android:drawableTop="@drawable/incidencia_candado"
+                        style="@style/IncidenciaButton"/>
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Otros problemas"
+                        android:drawableTop="@drawable/incidencia_aviso"
+                        style="@style/IncidenciaButton"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
 </FrameLayout>

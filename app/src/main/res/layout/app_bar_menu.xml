@@ -9,6 +9,7 @@
 
     <include layout="@layout/default_toolbar" />
 
+    <!-- Esto se sustuirá por el fragment en cuestión -->
     <include layout="@layout/content_menu" />
 
     <!--

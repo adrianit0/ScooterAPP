@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_incidencia"
             android:icon="@drawable/mainmenu_incidencia"
-            android:title="Realizar incidencia" />
+            android:title="Informar de un problema" />
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/mainmenu_help"
