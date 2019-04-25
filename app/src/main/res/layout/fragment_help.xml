@@ -5,5 +5,69 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HelpFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ayuda y contacto"
+            style="@style/textoTitulo"
+            android:textSize="32sp"
+            android:layout_marginBottom="0dp"
+            android:textAlignment="textStart"
+            android:paddingBottom="5dp"
+            android:drawableStart="@drawable/help_info"
+            android:drawablePadding="20dp"
+            android:paddingLeft="50dp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/Separador"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Contactar"
+                    android:drawableStart="@drawable/incidencia_bike"
+                    style="@style/HelpButton"
+                    />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="F.A.Q"
+                    android:drawableStart="@drawable/incidencia_damaged"
+                    style="@style/HelpButton"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Guía de uso"
+                    android:drawableStart="@drawable/incidencia_candado"
+                    style="@style/HelpButton"/>
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Términos y condiciones de uso"
+                    android:drawableStart="@drawable/incidencia_aviso"
+                    style="@style/HelpButton"/>
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
 </FrameLayout>
