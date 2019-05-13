@@ -46,6 +46,15 @@
                 />
 
             <EditText
+                android:id="@+id/nickRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/DefaultEditText"
+                android:hint="@string/nick_register"
+                android:inputType="text"
+                android:drawableStart="@drawable/card_image" />
+
+            <EditText
                 android:id="@+id/emailRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,15 +62,6 @@
                 android:hint="@string/emailHint"
                 android:inputType="textEmailAddress"
                 android:drawableStart="@drawable/email_image" />
-
-            <EditText
-                android:id="@+id/dniRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/DefaultEditText"
-                android:hint="@string/dni_register"
-                android:inputType="textEmailAddress"
-                android:drawableStart="@drawable/card_image" />
 
             <EditText
                 android:id="@+id/passRegister"
@@ -97,6 +97,7 @@
                 />
 
             <Button
+                android:id="@+id/registerButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DefaultButton"

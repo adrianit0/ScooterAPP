@@ -1,4 +1,4 @@
-package com.kidev.adrian.scooterapp;
+package com.kidev.adrian.scooterapp.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.kidev.adrian.scooterapp.R;
+
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -24,14 +26,14 @@ public class MenuActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // TODO: Borrar botón flotante
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         // Deslizador
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -84,6 +86,7 @@ public class MenuActivity extends AppCompatActivity
 
         if (id == R.id.nav_alquiler) {
             // Handle the camera action
+
         } else if (id == R.id.nav_incidencia) {
 
         } else if (id == R.id.nav_help) {
@@ -96,7 +99,7 @@ public class MenuActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

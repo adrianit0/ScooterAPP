@@ -31,11 +31,11 @@
                 android:gravity="center"/>
 
             <EditText
-                android:id="@+id/emailLogin"
+                android:id="@+id/nickLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DefaultEditText"
-                android:hint="@string/emailHint"
+                android:hint="Nombre de usuario"
                 android:inputType="textEmailAddress"
                 android:drawableStart="@drawable/accout_image"/>
 
@@ -49,6 +49,7 @@
                 android:drawableStart="@drawable/password_image"/>
 
             <Button
+                android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DefaultButton"
@@ -79,6 +80,7 @@
                 style="@style/textoContenido"
                 android:text="@string/not_account" />
             <Button
+                android:id="@+id/registerButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/DefaultButton"
