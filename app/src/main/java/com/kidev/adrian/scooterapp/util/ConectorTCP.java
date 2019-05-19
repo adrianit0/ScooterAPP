@@ -186,17 +186,19 @@ public class ConectorTCP {
 
     private class RealizarConexion extends AsyncTask<PaqueteServidor, Void, PaqueteCliente> {
 
+        private PaqueteServidor paqueteServidor;
+
         @Override
         protected PaqueteCliente doInBackground(PaqueteServidor... paquetes) {
             if (paquetes.length!=1) {
                 throw new RuntimeException("No se ha podido realizar la conexión porque faltan paquetes");
             }
 
-            PaqueteServidor paquete = paquetes[0];
+            paqueteServidor = paquetes[0];
 
             try  {
                 // Como primer valor le enviamos el nombre y nº de jugadores al servidor
-                String request = Util.packFromServer(paquete);
+                String request = Util.packFromServer(paqueteServidor);
 
                 outMessage = request;
 
@@ -214,15 +216,7 @@ public class ConectorTCP {
 
                     PaqueteCliente paqueteCliente = Util.unpackToCliente(respuesta);
 
-                    Util.CODIGO codigo = paqueteCliente.getCodigo();
-
-                    // Ejecutamos una parte u otra del callback según si devuelve o no errores
-                    if (codigo.getCodigo()>=200 && codigo.getCodigo()<=299) {
-                        paquete.getCallback().success(paqueteCliente.getArgumentos());
-                    } else {
-                        paquete.getCallback().error(paqueteCliente.getArgumentos(), paqueteCliente.getCodigo());
-                    }
-
+                    return paqueteCliente;
                 } catch (SocketException err) {
                     System.err.println("Error en el envio de datos. " + err.toString());
                 }
@@ -237,7 +231,19 @@ public class ConectorTCP {
         }
 
         @Override
-        protected void onPostExecute(PaqueteCliente paquete) {
+        protected void onPostExecute(PaqueteCliente paqueteCliente) {
+
+            if (paqueteCliente!=null) {
+                Util.CODIGO codigo = paqueteCliente.getCodigo();
+                if (codigo.getCodigo()>=200 && codigo.getCodigo()<=299) {
+                    paqueteServidor.getCallback().success(paqueteCliente.getArgumentos());
+                } else {
+                    paqueteServidor.getCallback().error(paqueteCliente.getArgumentos(), paqueteCliente.getCodigo());
+                }
+            } else {
+                paqueteServidor.getCallback().error(paqueteCliente.getArgumentos(), Util.CODIGO.timeOut);
+            }
+
             // Siguiente Query
             nextQuery();
         }

@@ -76,8 +76,7 @@ public class MainActivity extends AppCompatActivity {
             public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
                 Log.e("Error de conexión", codigoError.toString());
 
-                //TODO: Meter un toast con el prepare
-                //(Toast.makeText(getApplicationContext(), "Error: " + contenido.get("error"), Toast.LENGTH_SHORT)).show();
+                (Toast.makeText(getApplicationContext(), "Error: " + contenido.get("error"), Toast.LENGTH_SHORT)).show();
                 loginButton.setEnabled(true);
             }
         });

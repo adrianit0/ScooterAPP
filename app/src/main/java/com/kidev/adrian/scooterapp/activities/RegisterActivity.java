@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        textoNick = findViewById(R.id.nameRegister);
+        textoNick = findViewById(R.id.nickRegister);
         textoNombre = findViewById(R.id.nameRegister);
         textoApellidos = findViewById(R.id.surnameRegister);
         textoEmail = findViewById(R.id.emailRegister);
@@ -95,8 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
                 Log.e("Error de conexión", codigoError.toString());
 
-                //TODO: Meter un toast que funcione en otros threads
-                //mostrarError("Error", contenido.get("error"));
+                mostrarError("Error", contenido.get("error"));
                 registerButton.setEnabled(true);
             }
         });

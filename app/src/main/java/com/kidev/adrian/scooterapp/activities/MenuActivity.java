@@ -1,8 +1,10 @@
 package com.kidev.adrian.scooterapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,6 +16,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kidev.adrian.scooterapp.R;
+import com.kidev.adrian.scooterapp.fragments.HelpFragment;
+import com.kidev.adrian.scooterapp.fragments.IncidenciaFragment;
+import com.kidev.adrian.scooterapp.fragments.MapFragment;
+import com.kidev.adrian.scooterapp.fragments.PackFragment;
+import com.kidev.adrian.scooterapp.util.ConectorTCP;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -24,6 +31,15 @@ public class MenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent i = getIntent();
+        String nick = i.getStringExtra("nick");
+        String token = i.getStringExtra("token");
+
+        ConectorTCP conector = ConectorTCP.getInstance();
+
+        conector.setNick(nick);
+        conector.setToken(token);
 
         // TODO: Borrar botón flotante
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -44,6 +60,10 @@ public class MenuActivity extends AppCompatActivity
         // Navigation View
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contenedor, new MapFragment()).commit();
     }
 
     @Override
@@ -84,15 +104,16 @@ public class MenuActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
         if (id == R.id.nav_alquiler) {
-            // Handle the camera action
-
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new MapFragment()).commit();
         } else if (id == R.id.nav_incidencia) {
-
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new IncidenciaFragment()).commit();
         } else if (id == R.id.nav_help) {
-
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new HelpFragment()).commit();
         } else if (id == R.id.nav_bonos) {
-
+            fragmentManager.beginTransaction().replace(R.id.contenedor, new PackFragment()).commit();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_disconnect) {
