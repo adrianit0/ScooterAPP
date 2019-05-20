@@ -20,6 +20,7 @@
 
         <include
             layout="@layout/surface_map"
+            android:id="@+id/include"
             ></include>
     </android.support.constraint.ConstraintLayout>
 

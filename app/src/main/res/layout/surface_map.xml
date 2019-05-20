@@ -12,51 +12,55 @@
     android:padding="10dp"
     android:orientation="vertical"
     app:layout_constraintBottom_toBottomOf="parent"
-    android:visibility="gone"
     >
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="1234ABC - Scooter Modelo 1"
-                style="@style/textoNegrita"/>
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/textoNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="83% (~43 km)"
+                android:text="1234ABC - Scooter Modelo 1" />
+
+            <TextView
+                style="@style/textoNegrita"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:drawableStart="@drawable/notificacion_bateria"
-                style="@style/textoNegrita"/>
+                android:text="83% (~43 km)" />
 
             <TextView
+                style="@style/textoNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="121m"
                 android:drawableStart="@drawable/notificacion_actual"
-                style="@style/textoNegrita"/>
+                android:text="121m" />
 
             <TextView
+                style="@style/textoNegrita"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Calle Sagasta, 2, 11400, Cádiz"
                 android:drawableStart="@drawable/notificacion_mapa"
-                style="@style/textoNegrita"/>
+                android:text="Calle Sagasta, 2, 11400, Cádiz" />
         </LinearLayout>
 
         <ImageView
             android:layout_width="96dp"
             android:layout_height="96dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/moto_version_1"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
 
