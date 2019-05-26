@@ -43,7 +43,7 @@ public class ConectorTCP {
     private static ConectorTCP instance;
 
     private final long TIMEOUT = 30000;
-    private final String hostServerName="192.168.1.131";
+    private final String hostServerName="192.168.1.132";
     private final int port = 4444;
 
     // Test values
@@ -81,6 +81,10 @@ public class ConectorTCP {
 
     // Para tests
     public void realizarConexion (String nick, String token, String uri, String paqueteid, Map<String,String> parametros, CallbackRespuesta response) {
+        // Si no existen los parametros, se crea
+        if (parametros==null)
+            parametros=new HashMap<>();
+
         if (!conectado) {
             if (!iniciar ()) {
                 //RuntimeException e = new RuntimeException ();

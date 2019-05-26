@@ -14,14 +14,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ScrollView
-            android:id="@+id/scrollView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
@@ -35,6 +31,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/minutosActuales"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="0dp"
@@ -53,7 +50,14 @@
                     android:text="Añadir minutos:"
                     android:textAlignment="center" />
 
-                <LinearLayout
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+
+                <!-- <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -183,8 +187,9 @@
                             android:textAlignment="center"
                             android:textSize="12sp" />
                     </LinearLayout>
-                </LinearLayout>
+                </LinearLayout> -->
 
+                <!--
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,11 +197,11 @@
                     android:layout_marginTop="20dp"
                     android:text="Con la compra de uno de estos bonos estás aceptando los términos y condiciones de la plataforma. El precio de minuto sin usar ningún bono es de 0,20€/minuto, y será el que tendrás en caso de agotar tus minutos comprados."
 
-                    />
+                    />-->
 
             </LinearLayout>
-        </ScrollView>
 
+        <!--
         <Button
             android:id="@+id/button"
             style="@style/DefaultButton"
@@ -209,7 +214,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            /> -->
     </android.support.constraint.ConstraintLayout>
 
 

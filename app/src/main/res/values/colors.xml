@@ -23,6 +23,7 @@
 
     <color name="titulo">#000000</color>
     <color name="link">#11242b</color>
+    <color name="rippleEffect">#74838e</color>
 
     <!-- Botones -->
     <color name="buttonNormalGradient1">@color/secundaryColor</color>

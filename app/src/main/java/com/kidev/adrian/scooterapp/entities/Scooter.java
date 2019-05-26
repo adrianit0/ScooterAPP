@@ -12,19 +12,21 @@ public class Scooter {
     private String noSerie;
     private String matricula;
     private Integer codigo;
+    private Float bateria;
 
 
     public Scooter() {
 
     }
 
-    public Scooter(Integer id, LatLng posicion, Date fechaCompra, String noSerie, String matricula, Integer codigo) {
+    public Scooter(Integer id, LatLng posicion, Date fechaCompra, String noSerie, String matricula, Integer codigo, Float bateria) {
         this.id = id;
         this.posicion = posicion;
         this.fechaCompra = fechaCompra;
         this.noSerie = noSerie;
         this.matricula = matricula;
         this.codigo = codigo;
+        this.bateria = bateria;
     }
 
     public Integer getId() {
@@ -73,5 +75,13 @@ public class Scooter {
 
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
+    }
+
+    public Float getBateria() {
+        return bateria;
+    }
+
+    public void setBateria(Float bateria) {
+        this.bateria = bateria;
     }
 }

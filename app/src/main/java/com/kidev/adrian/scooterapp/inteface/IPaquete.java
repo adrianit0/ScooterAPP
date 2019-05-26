@@ -1,4 +1,4 @@
-package com.kidev.adrian.scooterapp.util;
+package com.kidev.adrian.scooterapp.inteface;
 
 /**
  *
