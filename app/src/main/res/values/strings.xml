@@ -12,7 +12,7 @@
     <string name="terminos_condiciones">He leido y acepto los términos y condiciones.</string>
     <string name="repeat_pass">Repite contraseña</string>
     <string name="pass_register">Contraseña</string>
-    <string name="dni_register">dni</string>
+    <string name="nick_register">nick</string>
     <string name="apellidos_register">Apellidos</string>
     <string name="nombre_register">Nombre</string>
     <string name="create_account_register">Crear una nueva cuenta</string>
@@ -28,4 +28,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_map_test">Map</string>
+    <string name="title_activity_maps_test2">Map</string>
 </resources>

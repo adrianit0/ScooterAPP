@@ -5,6 +5,10 @@ import android.os.Bundle;
 
 import com.kidev.adrian.scooterapp.R;
 
+/**
+ * No usar
+ * */
+@Deprecated
 public class MainMenu extends AppCompatActivity {
 
     @Override
