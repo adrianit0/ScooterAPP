@@ -1,4 +1,6 @@
-package com.kidev.adrian.scooterapp.util;
+package com.kidev.adrian.scooterapp.inteface;
+
+import com.kidev.adrian.scooterapp.util.Util;
 
 import java.util.Map;
 
@@ -8,7 +10,7 @@ import java.util.Map;
  */
 public interface CallbackRespuesta {
     
-    public void success (Map<String,String> contenido);    // El código está entre 200 y 299
-    public void error (Map<String,String> contenido, Util.CODIGO codigoError);      // El código es 3 o está entre 400 y 999
+    void success (Map<String,String> contenido);                             // El código está entre 200 y 299
+    void error (Map<String,String> contenido, Util.CODIGO codigoError);      // El código es 3 o está entre 400 y 999
     
 }

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/scooter_surface_fin_alquiler"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mysurfacepane2"
+    android:minHeight="128dp"
+    android:maxHeight="256dp"
+    android:layout_margin="30dp"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    >
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearSurface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tituloFinAlquiler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/textoTitulo"
+                android:text="Resumen alquiler"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modelo:" />
+
+                <TextView
+                    android:id="@+id/textoModelo"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1234ABC - Scooter Modelo 1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Duración recorrido:" />
+
+                <TextView
+                    android:id="@+id/textoDuracion"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="5 minutos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bono consumido:" />
+
+                <TextView
+                    android:id="@+id/textoBonoConsumido"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="5 minutos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bono restante:" />
+
+                <TextView
+                    android:id="@+id/textoBonoRestante"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="15 minutos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearMinutosSinBonos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Minutos sin bonos:" />
+
+                <TextView
+                    android:id="@+id/textoMinutosSinBonos"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0 minutos" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearCoste"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Precio minuto sin bono:" />
+
+                <TextView
+                    android:id="@+id/textoCoste"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0,20€/minuto" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearPrecioFinal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    style="@style/tituloFinAlquiler"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="32sp"
+                    android:text="Total:" />
+
+                <TextView
+                    android:id="@+id/textoPrecioFinal"
+                    style="@style/textoFinAlquiler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="32sp"
+                    android:text="0€" />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <Button
+                android:id="@+id/botonCerrarSurface"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Aceptar"
+                style="@style/NotificacionButton"/>
+
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

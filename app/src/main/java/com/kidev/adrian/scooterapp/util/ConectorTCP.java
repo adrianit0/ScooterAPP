@@ -3,7 +3,8 @@ package com.kidev.adrian.scooterapp.util;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -43,7 +42,7 @@ public class ConectorTCP {
     private static ConectorTCP instance;
 
     private final long TIMEOUT = 30000;
-    private final String hostServerName="192.168.43.229";//"192.168.1.132";
+    private static String hostServerName="192.168.0.162";//"192.168.43.229";//"192.168.1.132";
     private final int port = 4444;
 
     // Test values
@@ -73,6 +72,14 @@ public class ConectorTCP {
     public static boolean iniciarServidor () {
         instance=new ConectorTCP();
         return true;
+    }
+
+    public static String getHostServerName() {
+        return hostServerName;
+    }
+
+    public static void setHostServerName(String hostServerName) {
+        ConectorTCP.hostServerName = hostServerName;
     }
 
     public void realizarConexion (String uri, Map<String,String> parametros, CallbackRespuesta response) {

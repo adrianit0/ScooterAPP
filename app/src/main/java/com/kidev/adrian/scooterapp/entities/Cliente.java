@@ -12,12 +12,12 @@ public class Cliente  implements java.io.Serializable {
     private String nick;
     private String email;
     private int minutos;
-    private Date fechaCreacion;
+    private String fechaCreacion;
 
     public Cliente() {
     }
 
-    public Cliente(String nombre, String apellido1, String nick, String email, String pass, int minutos, Date fechaCreacion) {
+    public Cliente(String nombre, String apellido1, String nick, String email, String pass, int minutos, String fechaCreacion) {
         this.nombre = nombre;
         this.apellido1 = apellido1;
         this.nick = nick;
@@ -35,6 +35,10 @@ public class Cliente  implements java.io.Serializable {
     }
     public String getNombre() {
         return this.nombre;
+    }
+
+    public String getNombreCompleto () {
+        return nombre + " " + apellido1 + (apellido2!=null?" "+apellido2:"");
     }
 
     public void setNombre(String nombre) {
@@ -75,11 +79,11 @@ public class Cliente  implements java.io.Serializable {
     public void setMinutos(int minutos) {
         this.minutos = minutos;
     }
-    public Date getFechaCreacion() {
+    public String getFechaCreacion() {
         return this.fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(String fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 }

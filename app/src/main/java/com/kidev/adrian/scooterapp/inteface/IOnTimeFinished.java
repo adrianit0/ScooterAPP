@@ -1,4 +1,5 @@
 package com.kidev.adrian.scooterapp.inteface;
 
-public class IOnTimeFinished {
+public interface IOnTimeFinished {
+    void timeFinished();
 }

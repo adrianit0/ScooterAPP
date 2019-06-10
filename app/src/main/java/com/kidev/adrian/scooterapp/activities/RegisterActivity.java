@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kidev.adrian.scooterapp.R;
-import com.kidev.adrian.scooterapp.util.CallbackRespuesta;
+import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
 import com.kidev.adrian.scooterapp.util.Util;
 

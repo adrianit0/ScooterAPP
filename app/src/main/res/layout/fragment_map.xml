@@ -18,10 +18,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <include
-            layout="@layout/surface_map"
-            android:id="@+id/include"
-            ></include>
+        <!-- Surface para ver las motos para reservar-->
+        <include layout="@layout/surface_map" android:id="@+id/include" />
+
+        <!-- Surface para ver la moto una vez reservada-->
+        <include layout="@layout/surface_map_reserva" android:id="@+id/includeReserva" />
+
+        <!-- Surface para ver el tiempo transcurrido -->
+        <include layout="@layout/surface_map_time" android:id="@+id/includeContador" />
+
+        <!-- Surface para el resumen del alquiler -->
+        <include layout="@layout/surface_map_fin_alquiler" android:id="@+id/includeFinAlquiler" />
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

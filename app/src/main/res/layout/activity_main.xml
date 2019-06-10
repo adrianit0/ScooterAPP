@@ -40,13 +40,13 @@
                 android:drawableStart="@drawable/accout_image"/>
 
             <EditText
-                android:id="@+id/passLogin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/DefaultEditText"
-                android:hint="@string/passHint"
-                android:inputType="textPassword"
-                android:drawableStart="@drawable/password_image"/>
+            android:id="@+id/passLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DefaultEditText"
+            android:hint="@string/passHint"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/password_image"/>
 
             <Button
                 android:id="@+id/loginButton"

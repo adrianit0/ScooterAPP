@@ -13,6 +13,7 @@ public class Scooter {
     private String matricula;
     private Integer codigo;
     private Float bateria;
+    private String direccion;
 
 
     public Scooter() {
@@ -35,6 +36,14 @@ public class Scooter {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
     public LatLng getPosicion() {

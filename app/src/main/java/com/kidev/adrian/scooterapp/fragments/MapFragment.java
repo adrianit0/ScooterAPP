@@ -2,12 +2,9 @@ package com.kidev.adrian.scooterapp.fragments;
 
 import android.Manifest;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,14 +28,18 @@ import com.google.android.gms.tasks.Task;
 import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.activities.MenuActivity;
 import com.kidev.adrian.scooterapp.entities.Scooter;
+import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
-import com.kidev.adrian.scooterapp.util.CallbackRespuesta;
+import com.kidev.adrian.scooterapp.inteface.IOnTimeFinished;
+import com.kidev.adrian.scooterapp.util.AndroidUtil;
+import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
+import com.kidev.adrian.scooterapp.util.Cronometro;
 import com.kidev.adrian.scooterapp.util.Util;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -48,25 +49,53 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private MapView mMapView;
     private GoogleMap mMap;
 
-    private LinearLayout surface;
+    private LinearLayout surface;           // Surface donde estará la info de la scooter actual
+    private LinearLayout surfaceReserva;    // Surface donde estará la info de la reserva
+    private LinearLayout surfaceContador;   // Contador donde estará puesto el tiempo
+    private LinearLayout surfaceFinAlquiler;// Mensaje de fin de alquiler
+
+    private TextView textViewTituloContador;
+    private TextView textViewContador;
 
     private Scooter scooterSeleccionada = null;
+    private Scooter scooterReservada = null;
     private int position_permission_code = 1;
     private boolean permisoLocalizacion=false;
     private LatLng myLastPosition = null;
+
+    private Button botonReservar;
+    private Button botonCancelarReserva;
+    private Button botonAlquiler;
+    private Button botonFinAlquiler;
+    private Button botonResumenAlquiler;
+
+    private Cronometro cronometro;
+
+    private List<Marker> markers;
 
     public MapFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-        View include = (View) view.findViewById(R.id.include);
-        surface = (LinearLayout) view.findViewById(R.id.include);
-        mMapView = (MapView) view.findViewById(R.id.mapView);
+        markers = new ArrayList<>();
+
+        // Surfaces
+        surface = view.findViewById(R.id.include);
+        surfaceReserva = view.findViewById(R.id.includeReserva);
+        surfaceContador = view.findViewById(R.id.includeContador);
+        surfaceFinAlquiler = view.findViewById(R.id.includeFinAlquiler);
+
+        textViewTituloContador = surfaceContador.findViewById(R.id.tituloContador);
+        textViewContador = surfaceContador.findViewById(R.id.contadorMap);
+        surfaceReserva.setVisibility(View.GONE);
+        surfaceContador.setVisibility(View.GONE);
+        surfaceFinAlquiler.setVisibility(View.GONE);
+
+        mMapView = view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
 
         surface.setVisibility(View.GONE);
@@ -81,16 +110,132 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
         );
 
-        Button botonReservar = surface.findViewById(R.id.botonReservar);
+        botonReservar = surface.findViewById(R.id.botonReservar);
+        botonCancelarReserva = surfaceReserva.findViewById(R.id.botonCancelarReserva);
+        botonAlquiler = surfaceReserva.findViewById(R.id.botonAlquilar);
+        botonFinAlquiler = surfaceReserva.findViewById(R.id.botonFinAlquilar);
+        botonResumenAlquiler = surfaceFinAlquiler.findViewById(R.id.botonCerrarSurface);
+
         botonReservar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (scooterSeleccionada==null) {
                     Toast.makeText(getActivity(), "No hay Scooter seleccionada", Toast.LENGTH_LONG);
+                } else if (scooterReservada!=null) {
+                    Toast.makeText(getActivity(), "Ya tienes reservada una scooter", Toast.LENGTH_LONG);
                 } else {
-                    // TODO: Hacer la reserva
+                    scooterReservada = scooterSeleccionada;
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("noSerie", scooterReservada.getNoSerie()+"");
+                    botonReservar.setEnabled(false);
+
+                    ConectorTCP.getInstance().realizarConexion("reservar", parametros, new CallbackRespuesta() {
+                        @Override
+                        public void success(Map<String, String> contenido) {
+                            realizarReserva();
+
+                            botonReservar.setEnabled(true);
+                        }
+
+                        @Override
+                        public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                            AndroidUtil.crearToast(getActivity(), "No se ha podido reservar: " + contenido.get("error"));
+                            botonReservar.setEnabled(true);
+                            scooterReservada = null;
+                        }
+                    });
 
                 }
+            }
+        });
+
+        botonAlquiler.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // TODO: Realizar el alquiler
+                botonAlquiler.setEnabled(false);
+
+                AndroidUtil.crearInputDialog(getActivity(), "Codigo de la Scooter", "", new IOnInputDialog() {
+                    @Override
+                    public void onAccept(String message) {
+                        Map<String,String> parametros = new HashMap<>();
+                        parametros.put("noSerie", scooterReservada.getNoSerie()+"");
+                        parametros.put("codigo", message);
+
+                        ConectorTCP.getInstance().realizarConexion("alquilar", parametros, new CallbackRespuesta() {
+                            @Override
+                            public void success(Map<String, String> contenido) {
+                                empezarAlquiler();
+                            }
+
+                            @Override
+                            public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                                AndroidUtil.crearToast(getActivity(), "No se ha podido alquilar scooter: " + contenido.get("error"));
+                                onCancel("");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancel(String message) {
+                        botonAlquiler.setEnabled(true);
+                    }
+                });
+            }
+        });
+
+
+        botonCancelarReserva.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                peticionCancelarReserva();
+            }
+        });
+
+        botonFinAlquiler.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                AndroidUtil.crearAcceptDialog(getActivity(), "Confirmación", "¿Quieres finalizar el viaje?", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        botonFinAlquiler.setEnabled(false);
+                        Map<String,String> parametros = new HashMap<>();
+                        ConectorTCP.getInstance().realizarConexion("finalizar", parametros, new CallbackRespuesta() {
+                            @Override
+                            public void success(Map<String, String> contenido) {
+                                mostrarInfoAlquiler (contenido);
+                                finalizarAlquiler();
+                            }
+
+                            @Override
+                            public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                                //AndroidUtil.crearToast(getActivity(), "No se ha podido finalizar el alquiler: " + contenido.get("error"));
+                                // TODO: Mejorar esta parte
+                                botonFinAlquiler.setEnabled(true);
+                                AndroidUtil.crearDialog(getActivity(),"Error","No se ha posido finalizar el viaje, si necesita asistencia técnica llame al número que está localizado en la Scooter para finalizar el viaje.",
+                                        new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        botonResumenAlquiler.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                surfaceFinAlquiler.setVisibility(View.GONE);
             }
         });
 
@@ -199,7 +344,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         double latitude = 1;
         double longitude = 1;
 
-        Map<String, String> parametros = new HashMap<String, String>();
+        Map<String, String> parametros = new HashMap<>();
         parametros.put("lat", latitude + "");
         parametros.put("lon", longitude + "");
 
@@ -214,6 +359,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 for (int i = 0; i < length; i++) {
                     int id = Integer.parseInt(contenido.get("id[" + i + "]"));
                     int codigo = Integer.parseInt(contenido.get("codigo[" + i + "]"));
+                    String noSerie = contenido.get("noSerie[" + i + "]");
                     float bateria = Float.parseFloat(contenido.get("bateria[" + i + "]"));
                     float lat = Float.parseFloat(contenido.get("posicionLat[" + i + "]"));
                     float lon = Float.parseFloat(contenido.get("posicionLon[" + i + "]"));
@@ -221,12 +367,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     Scooter scooter = new Scooter();
                     scooter.setId(id);
                     scooter.setCodigo(codigo);
+                    scooter.setNoSerie(noSerie);
                     scooter.setPosicion(new LatLng(lat, lon));
                     scooter.setBateria(bateria);
 
-                    mMap.addMarker(new MarkerOptions()
-                            .position(scooter.getPosicion())
-                    ).setTag(scooter);
+                    String direccion = AndroidUtil.getStreetName(getActivity(), lat, lon);
+                    scooter.setDireccion(direccion);
+
+                    MarkerOptions markerOptions = new MarkerOptions().position(scooter.getPosicion());
+                    Marker marker = mMap.addMarker(markerOptions);
+                    marker.setTag(scooter);
+
+                    markers.add(marker);
 
                     if (i==0)
                         pos = new LatLng(lat, lon);
@@ -271,6 +423,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     @Override
     public boolean onMarkerClick(Marker marker) {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 14), 1500, null);
+
+        if (scooterReservada!=null)
+            return true;
+
         Scooter scooter = (Scooter) marker.getTag();
         scooterSeleccionada = scooter;
         if (surface!=null) {
@@ -292,12 +448,166 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             // TODO: Poner la diferencia entre la scooter y tu
             distanciaText.setText("?m");
 
-            // TODO: poner la dirección
-            calleText.setText("Dirección desconocia");
+            calleText.setText(scooter.getDireccion());
         } else {
             Log.e("ERROR map", "El surface no es visible");
         }
 
         return true;
+    }
+
+    private void realizarReserva () {
+        surfaceReserva.setVisibility(View.VISIBLE);
+        surfaceContador.setVisibility(View.VISIBLE);
+        surface.setVisibility(View.GONE);
+
+        botonCancelarReserva.setVisibility(View.VISIBLE);
+        botonAlquiler.setVisibility(View.VISIBLE);
+        botonFinAlquiler.setVisibility(View.GONE);
+
+        TextView matriculaText = surfaceReserva.findViewById(R.id.textoModelo);
+        TextView bateriaText = surfaceReserva.findViewById(R.id.textoBateria);
+        TextView distanciaText = surfaceReserva.findViewById(R.id.textoDistancia);
+        TextView calleText = surfaceReserva.findViewById(R.id.textoCalle);
+
+        //TODO: Almacenar en Strings
+        textViewTituloContador.setText("Tiempo restante:");
+        cronometro = new Cronometro(textViewContador, 900, new IOnTimeFinished() {
+            @Override
+            public void timeFinished() {
+                // Si se acaba el tiempo se cancela la reserva
+                peticionCancelarReserva();
+            }
+        });
+        cronometro.ejecutar();
+
+        int bateria = Math.round(scooterReservada.getBateria()*100);
+        int km = Math.round(bateria/1.8f); // Un valor random
+        bateriaText.setText(bateria+ "% (~"+ km +" km)");
+
+        //TODO: Añadir tambien la versión del modelo
+        //TODO: Cambiar la foto según que modelo sea
+        matriculaText.setText(scooterReservada.getCodigo() + " - Scooter Modelo 1");
+
+        // TODO: Poner la diferencia entre la scooter y tu
+        distanciaText.setText("?m");
+
+        calleText.setText(scooterReservada.getDireccion());
+
+        for(Marker m : markers) {
+            Scooter s = (Scooter) m.getTag();
+            if (s.getNoSerie().equals(scooterReservada.getNoSerie()))
+                continue;
+
+            m.setVisible(false);
+        }
+    }
+
+    private void peticionCancelarReserva() {
+        Map<String,String> parametros = new HashMap<>();
+        parametros.put("noSerie", scooterReservada.getNoSerie()+"");
+
+        botonCancelarReserva.setEnabled(false);
+        botonAlquiler.setEnabled(false);
+
+        if (cronometro!=null) {
+            cronometro.finalizar();
+            cronometro=null;
+        }
+
+        Log.e("map", "Se ha cancelado la reserva");
+
+        ConectorTCP.getInstance().realizarConexion("cancelarReserva", parametros, new CallbackRespuesta() {
+            @Override
+            public void success(Map<String, String> contenido) {
+                cancelarReserva();
+            }
+
+            @Override
+            public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                AndroidUtil.crearToast(getActivity(), "No se ha podido cancelar la reserva: " + contenido.get("error"));
+                this.success(contenido);
+            }
+        });
+    }
+
+    private void cancelarReserva () {
+        botonCancelarReserva.setEnabled(true);
+        botonAlquiler.setEnabled(true);
+
+        surfaceReserva.setVisibility(View.GONE);
+        surfaceContador.setVisibility(View.GONE);
+
+        for (Marker m : markers) {
+            m.setVisible(true);
+        }
+        scooterReservada=null;
+    }
+
+    private void empezarAlquiler () {
+        botonCancelarReserva.setVisibility(View.GONE);
+        botonAlquiler.setVisibility(View.GONE);
+        botonFinAlquiler.setVisibility(View.VISIBLE);
+
+        if (cronometro!=null) {
+            cronometro.finalizar();
+            //TODO: Almacenar en constantes String
+            textViewTituloContador.setText("Tiempo alquiler:");
+            cronometro=new Cronometro(textViewContador);
+            cronometro.ejecutar();
+        }
+    }
+
+    private void mostrarInfoAlquiler(Map<String,String> parametros) {
+        int minutosConducidos = Integer.parseInt(parametros.get("minutosConducidos"));
+        int minutosConsumidos = Integer.parseInt(parametros.get("minutosConsumidos"));
+        int minutosRestantes = Integer.parseInt(parametros.get("minutosRestante"));
+        double costeTotal = Double.parseDouble(parametros.get("costeTotal"));
+        int minutosFueraBono = minutosConducidos-minutosConsumidos;
+        double costeMinuto = costeTotal/minutosFueraBono;
+
+        TextView textoModelo = surfaceFinAlquiler.findViewById(R.id.textoModelo);
+        TextView textoMinutosConducidos = surfaceFinAlquiler.findViewById(R.id.textoDuracion);
+        TextView textoMinutosConsumidos = surfaceFinAlquiler.findViewById(R.id.textoBonoConsumido);
+        TextView textoMinutosRestantes = surfaceFinAlquiler.findViewById(R.id.textoBonoRestante);
+
+        // TODO: Cambiar el modelo por el que sea de verdad
+        textoModelo.setText(scooterReservada.getMatricula() + " - Modelo 1");
+        // TODO: Meter en constantes
+        textoMinutosConducidos.setText(minutosConducidos + " minutos");
+        textoMinutosConsumidos.setText(minutosConsumidos + " minutos");
+        textoMinutosRestantes.setText(minutosRestantes + " minutos");
+
+        LinearLayout linearMinutosSinBonos = surfaceFinAlquiler.findViewById(R.id.linearMinutosSinBonos);
+        LinearLayout linearPrecioMinuto = surfaceFinAlquiler.findViewById(R.id.linearCoste);
+        LinearLayout linearPrecioFinal = surfaceFinAlquiler.findViewById(R.id.linearPrecioFinal);
+
+        linearMinutosSinBonos.setVisibility(minutosFueraBono>0 ? View.VISIBLE : View.GONE);
+        linearPrecioMinuto.setVisibility(minutosFueraBono>0 ? View.VISIBLE : View.GONE);
+        linearPrecioFinal.setVisibility(minutosFueraBono>0 ? View.VISIBLE : View.GONE);
+
+        if (minutosFueraBono>0) {
+            TextView textoMinutosSinBonos = surfaceFinAlquiler.findViewById(R.id.textoMinutosSinBonos);
+            TextView textoPrecioMinuto = surfaceFinAlquiler.findViewById(R.id.textoCoste);
+            TextView textoPrecioFinal = surfaceFinAlquiler.findViewById(R.id.textoPrecioFinal);
+
+            textoMinutosSinBonos.setText(minutosFueraBono+" minutos");
+            textoPrecioMinuto.setText(costeMinuto + "€/minuto");
+            textoPrecioFinal.setText(costeTotal+"€");
+        }
+
+        //TODO: Poner bonito
+        ((MenuActivity) getActivity()).actualizarMinutos(minutosRestantes);
+
+        surfaceFinAlquiler.setVisibility(View.VISIBLE);
+    }
+
+    private void finalizarAlquiler () {
+        botonFinAlquiler.setEnabled(true);
+        if (cronometro!=null){
+            cronometro.finalizar();
+            cronometro=null;
+        }
+        cancelarReserva();
     }
 }

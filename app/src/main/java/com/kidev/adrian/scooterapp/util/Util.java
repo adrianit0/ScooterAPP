@@ -10,8 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
 import com.kidev.adrian.scooterapp.inteface.IPaquete;
 
@@ -436,28 +439,4 @@ public class Util {
         return parametros;
     }
 
-    public static void crearDialog (Activity activity, String title, String message, DialogInterface.OnClickListener callback) {
-        new AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("ok", callback)
-                .create().show();
-    }
-
-    public static void crearErrorDialog (Activity activity, String message){
-        new AlertDialog.Builder(activity)
-                .setTitle("Error")
-                .setMessage(message)
-                .setPositiveButton("ok", null)
-                .create().show();
-    }
-
-    public static void crearAcceptDialog (Activity activity, String title, String message, DialogInterface.OnClickListener yesCallback, DialogInterface.OnClickListener noCallback) {
-        new AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("Sí", yesCallback)
-                .setNegativeButton("No", noCallback)
-                .create().show();
-    }
 }

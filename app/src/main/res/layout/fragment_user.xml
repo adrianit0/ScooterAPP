@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context=".fragments.IncidenciaFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tu perfil"
+            style="@style/textoTitulo"
+            android:layout_marginBottom="0dp"
+            android:paddingBottom="5dp"
+            />
+        <!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Toda la información sobre tu cuenta en ScooterAPP."
+            style="@style/textoContenido"
+            />-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            style="@style/Separador"
+            />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <!-- NOMBRE -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nombre:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu nombre"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+
+                <!-- APELLIDO 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apellido 1:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoApellido1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu primer apellido"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+
+                <!-- APELLIDO 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Apellido 2:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoApellido2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu segundo apellido"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+
+                <!-- NICK -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nick:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoNick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu nickname"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+
+                <!-- EMAIL -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu email"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+
+                <!-- FECHA DE CREACION -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Fecha de creación:"
+                        style="@style/tituloPerfil"/>
+                    <TextView
+                        android:id="@+id/textoFechaCreacion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:text="Tu fecha de creación"
+                        style="@style/textoPerfil"/>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>

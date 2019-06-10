@@ -9,6 +9,10 @@
             android:icon="@drawable/mainmenu_bike"
             android:title="Alquilar Scooter" />
         <item
+            android:id="@+id/nav_perfil"
+            android:icon="@drawable/mainmenu_perfil"
+            android:title="Mis datos" />
+        <item
             android:id="@+id/nav_incidencia"
             android:icon="@drawable/mainmenu_incidencia"
             android:title="Informar de un problema" />

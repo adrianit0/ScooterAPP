@@ -14,8 +14,6 @@
     app:layout_constraintBottom_toBottomOf="parent"
     >
 
-
-
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -70,6 +68,7 @@
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -79,16 +78,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="Cancelar reserva"
-            style="@style/NotificacionButton"
-            android:layout_marginRight="10dp"/>
+            style="@style/NotificacionButton"/>
         <Button
             android:id="@+id/botonAlquilar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="Alquilar Scooter"
+            style="@style/NotificacionButton"/>
+
+        <Button
+            android:id="@+id/botonFinAlquilar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Finalizar alquiler"
             style="@style/NotificacionButton"
-            android:layout_marginLeft="10dp"/>
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -1,7 +1,6 @@
 package com.kidev.adrian.scooterapp.activities;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,10 +8,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kidev.adrian.scooterapp.R;
-import com.kidev.adrian.scooterapp.util.CallbackRespuesta;
+import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
+import com.kidev.adrian.scooterapp.util.AndroidUtil;
+import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
 import com.kidev.adrian.scooterapp.util.Util;
 
@@ -29,8 +29,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Nos conectamos con el servidor
-        ConectorTCP.getInstance();
+        // Configuración previa de la IP
+        // TODO: Eliminar
+        String serverHost = ConectorTCP.getHostServerName();
+        AndroidUtil.crearInputDialog(this, "Introducir IP", serverHost, new IOnInputDialog() {
+            @Override
+            public void onAccept(String message) {
+                ConectorTCP.setHostServerName(message);
+                ConectorTCP.getInstance();
+            }
+
+            @Override
+            public void onCancel(String message) {
+                ConectorTCP.getInstance();
+            }
+        });
+        // Fin configuración de la IP
 
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
@@ -57,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO: Pasar a la constante de idioma
         if (textoNick.getText().toString().isEmpty()) {
-            Util.crearErrorDialog(this, "Debes introducir el nick");
+            AndroidUtil.crearErrorDialog(this, "Debes introducir el nick");
         } else if (textoPass.getText().toString().isEmpty()) {
-            Util.crearErrorDialog(this, "Debes introducir la pass");
+            AndroidUtil.crearErrorDialog(this, "Debes introducir la pass");
         }
 
         Map<String,String> parametros = new HashMap<>();
@@ -86,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
                 Log.e("Error de conexión", codigoError.toString());
-                Util.crearErrorDialog(activity, contenido.get("error"));
+                AndroidUtil.crearErrorDialog(activity, contenido.get("error"));
                 loginButton.setEnabled(true);
             }
         });

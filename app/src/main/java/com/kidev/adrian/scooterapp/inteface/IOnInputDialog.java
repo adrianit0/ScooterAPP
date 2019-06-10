@@ -1,4 +1,6 @@
 package com.kidev.adrian.scooterapp.inteface;
 
-public class IOnInputDialog {
+public interface IOnInputDialog {
+    void onAccept(String message);
+    void onCancel(String message);
 }

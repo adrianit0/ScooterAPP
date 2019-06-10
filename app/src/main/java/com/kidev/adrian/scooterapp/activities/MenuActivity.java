@@ -5,18 +5,14 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -33,22 +29,26 @@ import com.kidev.adrian.scooterapp.fragments.HelpFragment;
 import com.kidev.adrian.scooterapp.fragments.IncidenciaFragment;
 import com.kidev.adrian.scooterapp.fragments.MapFragment;
 import com.kidev.adrian.scooterapp.fragments.PackFragment;
+import com.kidev.adrian.scooterapp.fragments.UserFragment;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
 
-import org.w3c.dom.Text;
+import java.sql.Date;
 
 public class MenuActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private Cliente usuario;
     private IOnRequestPermission mCallback;
 
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+
     // Fragments:
     private MapFragment mapFragment;
+    private UserFragment userFragment;
     private IncidenciaFragment incidenciaFragment;
     private HelpFragment helpFragment;
     private PackFragment packFragment;
-
 
     private String lastTag;
 
@@ -64,6 +64,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         String token = i.getStringExtra("token");
 
         mapFragment = new MapFragment();
+        userFragment = new UserFragment();
         incidenciaFragment = new IncidenciaFragment();
         helpFragment = new HelpFragment();
         packFragment = new PackFragment();
@@ -76,6 +77,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         usuario.setEmail(i.getStringExtra("email"));
         usuario.setId(Integer.parseInt(i.getStringExtra("id")));
         usuario.setMinutos(Integer.parseInt(i.getStringExtra("minutos")));
+        usuario.setFechaCreacion(i.getStringExtra("fechaCreacion"));
 
         ConectorTCP conector = ConectorTCP.getInstance();
 
@@ -93,17 +95,16 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         });*/
 
         // Deslizador
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        TextView textoNombre = drawer.findViewWithTag(R.id.textoNombre);
-        //TODO: Seguir
-
         // Navigation View
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        actualizarDatosNavigationView();
 
         // FragmentManager
         mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
@@ -149,6 +150,8 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
 
         if (id == R.id.nav_alquiler) {
             mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
+        } else if (id == R.id.nav_perfil) {
+            mostrarFragment(R.id.contenedor, userFragment, "user", false);
         } else if (id == R.id.nav_incidencia) {
             mostrarFragment(R.id.contenedor, incidenciaFragment, "incidencia", false);
         } else if (id == R.id.nav_help) {
@@ -161,7 +164,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -243,5 +246,29 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         }
         // Despues de usar el callback lo eliminamos
         mCallback=null;
+    }
+
+    public void actualizarDatosNavigationView() {
+        TextView textoNombre = navigationView.getHeaderView(0).findViewById(R.id.textoNombre);
+        TextView textoEmail = navigationView.getHeaderView(0).findViewById(R.id.textoEmail);
+
+        textoNombre.setText(usuario.getNombreCompleto());
+        textoEmail.setText(usuario.getEmail());
+
+        actualizarMinutos(usuario.getMinutos());
+    }
+
+    public void actualizarMinutos (int nMinutos) {
+        usuario.setMinutos(nMinutos);
+
+        TextView textoMinutos = navigationView.getHeaderView(0).findViewById(R.id.textoMinutos);
+        if (nMinutos==0) {
+            textoMinutos.setText("No tienes minutos de bonos");
+        } else if (nMinutos==1) {
+            textoMinutos.setText("Tienes " +nMinutos+ " minuto de bono");
+        } else {
+            textoMinutos.setText("Tienes " +nMinutos+ " minutos de bono");
+        }
+
     }
 }
