@@ -22,9 +22,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.entities.Cliente;
+import com.kidev.adrian.scooterapp.fragments.CameraFragment;
 import com.kidev.adrian.scooterapp.fragments.HelpFragment;
 import com.kidev.adrian.scooterapp.fragments.IncidenciaFragment;
 import com.kidev.adrian.scooterapp.fragments.MapFragment;
@@ -49,6 +51,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
     private IncidenciaFragment incidenciaFragment;
     private HelpFragment helpFragment;
     private PackFragment packFragment;
+    private CameraFragment cameraFragment;
 
     private String lastTag;
 
@@ -68,6 +71,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         incidenciaFragment = new IncidenciaFragment();
         helpFragment = new HelpFragment();
         packFragment = new PackFragment();
+        cameraFragment = new CameraFragment();
 
         usuario = new Cliente();
         usuario.setNick(i.getStringExtra("nick"));
@@ -159,7 +163,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         } else if (id == R.id.nav_bonos) {
             mostrarFragment(R.id.contenedor, packFragment, "pack", false);
         } else if (id == R.id.nav_share) {
-
+            mostrarFragment(R.id.contenedor, cameraFragment, "camera", false);
         } else if (id == R.id.nav_disconnect) {
 
         }
@@ -238,10 +242,10 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         if (mCallback==null)
             return;
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            //Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Permission GRANTED", Toast.LENGTH_SHORT).show();
             mCallback.onPermissionAccepted(permissions[0]);
         } else {
-            //Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             mCallback.onPermissionDenied(permissions[0]);
         }
         // Despues de usar el callback lo eliminamos

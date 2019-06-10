@@ -276,7 +276,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             public void onPermissionDenied(String permiso) {
                 new AlertDialog.Builder(getActivity())
                         .setTitle("Permiso denegado")
-                        .setMessage("No tienes permisos para acceder a la cámara. No se mostrará tu posición actual.")
+                        .setMessage("No tienes permisos para acceder al GPS. No se mostrará tu posición actual.")
                         .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -302,7 +302,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 // getLocationPermission();
                 Toast.makeText(getContext(), "No tienes permisos para coger tu ubicación", Toast.LENGTH_LONG).show();
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
