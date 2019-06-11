@@ -101,6 +101,14 @@ public class ConectorTCP {
             }
         }
 
+        for(PaqueteServidor s : peticiones) {
+            if (s.getUri().equals(uri)) {
+                parametros.put("error", "Ya se ha hecho esta petición, espera a que finalice para volverla a realizar");
+                response.error(parametros, Util.CODIGO.internalError);
+                return;
+            }
+        }
+
         // Ponemos los valores para realizar la conexión
         PaqueteServidor paquete = new PaqueteServidor();
         paquete.setIdPaquete(paqueteid);

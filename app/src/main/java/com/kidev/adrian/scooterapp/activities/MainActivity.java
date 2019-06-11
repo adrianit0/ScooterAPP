@@ -105,4 +105,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        // Nos salimos del programa
+        finishAffinity();
+    }
 }

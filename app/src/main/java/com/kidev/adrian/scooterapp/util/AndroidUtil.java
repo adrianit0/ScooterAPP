@@ -32,11 +32,9 @@ public class AndroidUtil {
             geocoder = new Geocoder(activity, Locale.getDefault());
 
         try {
-            Log.e("MAP show", "Inicio de búsqueda de calles");
             List<Address> direcciones = geocoder.getFromLocation(latitude, longitude, 10);
 
             if (!direcciones.isEmpty()) {
-                Log.e("MAP show", "Lista de direcciones: " + direcciones.toString());
                 return direcciones.get(0).getAddressLine(0);
             }
             Log.e("MAP show", "Lista de direcciones vacía");
@@ -44,7 +42,6 @@ public class AndroidUtil {
             Log.e("Error MAP geocoder", "Error al encontrar: " + e.getMessage());
         }
 
-        // TODO: Meter en constantes
         return "Dirección desconocida";
     }
 

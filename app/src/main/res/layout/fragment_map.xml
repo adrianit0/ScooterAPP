@@ -18,17 +18,51 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <LinearLayout
+            android:id="@+id/linearBotonesMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            map:layout_constraintBottom_toTopOf="@id/include">
+            <Button
+                android:id="@+id/botonActualizar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                style="@style/NotificacionButton"
+                android:drawableTop="@drawable/map_update"
+                />
+            <Button
+                android:id="@+id/botonIncidencia"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                style="@style/NotificacionButton"
+                android:drawableTop="@drawable/map_problem"
+                />
+            <Button
+                android:id="@+id/botonComprar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                style="@style/NotificacionButton"
+                android:drawableTop="@drawable/map_shop"
+                />
+        </LinearLayout>
+
+
         <!-- Surface para ver las motos para reservar-->
         <include layout="@layout/surface_map" android:id="@+id/include" />
 
         <!-- Surface para ver la moto una vez reservada-->
-        <include layout="@layout/surface_map_reserva" android:id="@+id/includeReserva" />
+        <include layout="@layout/surface_map_reserva"
+            android:id="@+id/includeReserva"
+            android:visibility="gone"/>
 
         <!-- Surface para ver el tiempo transcurrido -->
         <include layout="@layout/surface_map_time" android:id="@+id/includeContador" />
 
         <!-- Surface para el resumen del alquiler -->
-        <include layout="@layout/surface_map_fin_alquiler" android:id="@+id/includeFinAlquiler" />
+        <include layout="@layout/surface_map_fin_alquiler"
+            android:id="@+id/includeFinAlquiler"
+            android:visibility="gone"/>
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

@@ -119,9 +119,11 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+        // No dejar volver al anterior activity
+        /*else {
+            super.onBackPressed();
+        } */
     }
 
     @Override
