@@ -5,17 +5,19 @@ import android.os.CountDownTimer;
 public abstract class CountUpTimer extends CountDownTimer {
     private static final long INTERVAL_MS = 1000;
     private final long duration;
+    private final int initialTime;
 
-    protected CountUpTimer(long durationMs) {
+    protected CountUpTimer(long durationMs, int initialTime) {
         super(durationMs, INTERVAL_MS);
         this.duration = durationMs;
+        this.initialTime=initialTime;
     }
 
     public abstract void onTick(int second);
 
     @Override
     public void onTick(long msUntilFinished) {
-        int second = (int) ((duration - msUntilFinished) / 1000);
+        int second = initialTime + (int) ((duration - msUntilFinished) / 1000);
         onTick(second);
     }
 

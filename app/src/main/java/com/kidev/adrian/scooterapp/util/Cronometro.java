@@ -49,10 +49,10 @@ public class Cronometro{
         };
     }
 
-    public Cronometro (TextView texto) {
-        this(texto, 0, false, null);
+    public Cronometro (TextView texto, int initSeconds) {
+        this(texto, initSeconds, false, null);
 
-        upTimer = new CountUpTimer(Long.MAX_VALUE) {
+        upTimer = new CountUpTimer(Long.MAX_VALUE, initSeconds) {
             @Override
             public void onTick(int second) {
                 final int min = second/60;

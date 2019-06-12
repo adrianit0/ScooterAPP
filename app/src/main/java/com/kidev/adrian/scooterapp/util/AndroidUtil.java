@@ -12,6 +12,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -97,6 +98,14 @@ public class AndroidUtil {
             }
         });
 
+        builder.show();
+    }
+
+    public static void crearViewDialog (Activity activity, View view, String title, DialogInterface.OnClickListener callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(title);
+        builder.setView(view);
+        builder.setPositiveButton("Aceptar", callback);
         builder.show();
     }
 

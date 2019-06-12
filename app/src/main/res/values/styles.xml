@@ -43,6 +43,21 @@
         <item name="android:layout_marginBottom">15dp</item>
     </style>
 
+    <style name="tituloAviso" parent="textoTitulo">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="textoAviso" parent="tituloAviso">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:layout_marginRight">25dp</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
     <!-- Texto normal -->
     <style name="textoNormal">
         <item name="android:textSize">14sp</item>
@@ -95,6 +110,13 @@
         <item name="android:layout_marginBottom">30dp</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingRight">20dp</item>
+    </style>
+
+    <style name="ButtonWithoutMarging" parent="DefaultButton">
+        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginLeft">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
     </style>
 
     <!-- Botón para el menu -->

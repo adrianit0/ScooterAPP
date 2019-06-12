@@ -2,6 +2,7 @@ package com.kidev.adrian.scooterapp.activities;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -32,15 +34,23 @@ import com.kidev.adrian.scooterapp.fragments.IncidenciaFragment;
 import com.kidev.adrian.scooterapp.fragments.MapFragment;
 import com.kidev.adrian.scooterapp.fragments.PackFragment;
 import com.kidev.adrian.scooterapp.fragments.UserFragment;
+import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
+import com.kidev.adrian.scooterapp.inteface.IOnQrDetected;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
+import com.kidev.adrian.scooterapp.model.ScooterViewModel;
+import com.kidev.adrian.scooterapp.util.AndroidUtil;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
+import com.kidev.adrian.scooterapp.util.Util;
 
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MenuActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private Cliente usuario;
     private IOnRequestPermission mCallback;
+    private ScooterViewModel scooterViewModel;
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -54,11 +64,14 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
     private CameraFragment cameraFragment;
 
     private String lastTag;
+    private String preCameraTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        scooterViewModel = ViewModelProviders.of(this).get(ScooterViewModel.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,12 +79,6 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         Intent i = getIntent();
         String token = i.getStringExtra("token");
 
-        mapFragment = new MapFragment();
-        userFragment = new UserFragment();
-        incidenciaFragment = new IncidenciaFragment();
-        helpFragment = new HelpFragment();
-        packFragment = new PackFragment();
-        cameraFragment = new CameraFragment();
 
         usuario = new Cliente();
         usuario.setNick(i.getStringExtra("nick"));
@@ -82,6 +89,25 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         usuario.setId(Integer.parseInt(i.getStringExtra("id")));
         usuario.setMinutos(Integer.parseInt(i.getStringExtra("minutos")));
         usuario.setFechaCreacion(i.getStringExtra("fechaCreacion"));
+
+        // Para el bundle map
+        Bundle mapBundle = new Bundle();
+        int estadoAlquiler = Integer.parseInt(i.getStringExtra("state"));
+        mapBundle.putInt("state", estadoAlquiler);
+        if (estadoAlquiler>0) {
+            long time = Long.parseLong(i.getStringExtra("time"));
+            Integer idScooter = Integer.parseInt(i.getStringExtra("scooterID" ));
+
+            mapBundle.putLong("time", time);
+            mapBundle.putInt("scooterID", idScooter.intValue());
+        }
+        // Fin bundle map
+        mapFragment = (MapFragment) MapFragment.instantiate(getApplicationContext(), MapFragment.class.getName(), mapBundle);
+        userFragment = new UserFragment();
+        incidenciaFragment = new IncidenciaFragment();
+        helpFragment = new HelpFragment();
+        packFragment = new PackFragment();
+        cameraFragment = new CameraFragment();
 
         ConectorTCP conector = ConectorTCP.getInstance();
 
@@ -111,19 +137,24 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         actualizarDatosNavigationView();
 
         // FragmentManager
-        mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
+        String tag = scooterViewModel.getActualFragment();
+        if (tag==null) {
+            mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
+        } else {
+            mostrarFragmentByTag(tag, false);
+        }
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (lastTag.equals("camera")) { //TODO: Meter en constante
+            closeCameraQr();
+        } else {
+            preguntarDesconectar();
         }
-        // No dejar volver al anterior activity
-        /*else {
-            super.onBackPressed();
-        } */
     }
 
     @Override
@@ -165,14 +196,57 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         } else if (id == R.id.nav_bonos) {
             mostrarFragment(R.id.contenedor, packFragment, "pack", false);
         } else if (id == R.id.nav_share) {
-            mostrarFragment(R.id.contenedor, cameraFragment, "camera", false);
-        } else if (id == R.id.nav_disconnect) {
 
+        } else if (id == R.id.nav_disconnect) {
+            preguntarDesconectar();
         }
 
         drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void preguntarDesconectar() {
+        AndroidUtil.crearAcceptDialog(this, "Desconectar", "¿Quieres desconectarte del servidor?", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                desconectar();
+            }
+        }, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void desconectar () {
+        final Activity activity = this;
+        Map<String,String> parametros = new HashMap<>();
+        ConectorTCP.getInstance().realizarConexion("desconectar", parametros, new CallbackRespuesta() {
+            @Override
+            public void success(Map<String, String> contenido) {
+                Intent intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                AndroidUtil.crearToast(activity,"No se ha podido desconectar del servidor. " + contenido.get("error"));
+            }
+        });
+    }
+
+    // Abre la cámara Qr
+    public void showCameraQr (IOnQrDetected callback) {
+        preCameraTag = lastTag;
+        mostrarFragment(R.id.contenedor, cameraFragment, "camera", true);
+        cameraFragment.openCamera(callback);
+    }
+
+    // Cierra la cámara Qr
+    public void closeCameraQr () {
+        mostrarFragmentByTag(preCameraTag, false);
     }
 
     private void mostrarFragment (int resId, Fragment fragment, String tag, boolean addToBackStack) {
@@ -199,6 +273,35 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
 
         transaction.commit();
         lastTag = tag;
+
+        ViewModelProviders.of(this).get(ScooterViewModel.class).setActualFragment(tag);
+    }
+
+    public void mostrarFragmentByTag (String tag, boolean addToBackStack) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+        if (lastTag != null) {
+            Fragment lastFragment = fragmentManager.findFragmentByTag( lastTag );
+            if ( lastFragment != null ) {
+                transaction.hide( lastFragment );
+            }
+        }
+
+        Fragment actualFragment = fragmentManager.findFragmentByTag(tag);
+
+        if (actualFragment!=null) {
+            transaction.show( actualFragment );
+
+            if (addToBackStack){
+                transaction.addToBackStack(tag);
+            }
+
+            transaction.commit();
+            lastTag = tag;
+        }
+
+        ViewModelProviders.of(this).get(ScooterViewModel.class).setActualFragment(tag);
     }
 
     /**

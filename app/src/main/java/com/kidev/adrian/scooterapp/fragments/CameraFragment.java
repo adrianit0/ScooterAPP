@@ -1,6 +1,7 @@
 package com.kidev.adrian.scooterapp.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.CameraSource;
@@ -24,6 +26,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.activities.MenuActivity;
+import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
+import com.kidev.adrian.scooterapp.inteface.IOnQrDetected;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
 import com.kidev.adrian.scooterapp.util.AndroidUtil;
 
@@ -35,12 +39,18 @@ public class CameraFragment extends Fragment {
 
     private SurfaceView surfaceView;
     private CameraSource camera;
-    private TextView textView;
     private BarcodeDetector barcodeDetector;
+    private IOnQrDetected callback;
 
+    private boolean encontrado = false;
 
     public CameraFragment() {
         // Required empty public constructor
+    }
+
+    public void openCamera (IOnQrDetected detected) {
+        callback = detected;
+        encontrado = false;
     }
 
     @Override
@@ -49,8 +59,45 @@ public class CameraFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_camera, container, false);
 
+        final MenuActivity activity = (MenuActivity) getActivity();
+
+        Button botonCodigo = root.findViewById(R.id.botonCodigo);
+        botonCodigo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AndroidUtil.crearInputDialog(getActivity(), "Código", "", new IOnInputDialog() {
+                    @Override
+                    public void onAccept(final String message) {
+                        if (callback!=null)
+
+                            activity.runOnUiThread(
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Vibrator vibrator = (Vibrator) getActivity().getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                                        try {
+                                            vibrator.vibrate(500);
+                                        } catch (NullPointerException e ){
+                                            Log.e("Error vibracion MAP", "No se ha podido vibrar: " + e.getMessage());
+                                        }
+
+                                        if (callback!=null)
+                                            callback.onQrDetected("SC:" + message);
+                                    }
+                                }
+                            );
+                            activity.closeCameraQr();
+                    }
+
+                    @Override
+                    public void onCancel(String message) {
+
+                    }
+                });
+            }
+        });
+
         surfaceView = root.findViewById(R.id.surfaceCamera);
-        textView = root.findViewById(R.id.textview);
 
         // Para detectar el código Qr
         barcodeDetector = new BarcodeDetector.Builder(getActivity()).setBarcodeFormats(Barcode.QR_CODE).build();
@@ -114,26 +161,35 @@ public class CameraFragment extends Fragment {
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
+                // Si ya ha encontrado un código Qr que deje de buscar más
+                if (encontrado)
+                    return;
+
                 final SparseArray<Barcode> qrCodes = detections.getDetectedItems();
 
                 //Log.e("MAP QR", "Está recibiendo información");
 
                 if (qrCodes.size()>0) {
+                    encontrado = true;
 
-                    textView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Vibrator vibrator = (Vibrator) getActivity().getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                            try {
-                                vibrator.vibrate(500);
-                            } catch (NullPointerException e ){
-                                Log.e("Error vibracion MAP", "No se ha podido vibrar: " + e.getMessage());
+                    MenuActivity activity = (MenuActivity) getActivity();
+                    activity.runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                Vibrator vibrator = (Vibrator) getActivity().getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                                try {
+                                    vibrator.vibrate(500);
+                                } catch (NullPointerException e ){
+                                    Log.e("Error vibracion MAP", "No se ha podido vibrar: " + e.getMessage());
+                                }
+
+                                if (callback!=null)
+                                    callback.onQrDetected(qrCodes.valueAt(0).displayValue);
                             }
-
-                            textView.setText(qrCodes.valueAt(0).displayValue);
-
                         }
-                    });
+                    );
+                    activity.closeCameraQr();
                 }
             }
         });
