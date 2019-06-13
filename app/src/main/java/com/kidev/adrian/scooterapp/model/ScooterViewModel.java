@@ -58,6 +58,13 @@ public class ScooterViewModel extends AndroidViewModel {
         return tuPosicion;
     }
 
+    public LatLng getLastPosition() {
+        if (tuPosicion==null)
+            return null;
+
+        return tuPosicion.getValue();
+    }
+
     public void changePosition (LatLng posicion) {
         tuPosicion.setValue(posicion);
     }

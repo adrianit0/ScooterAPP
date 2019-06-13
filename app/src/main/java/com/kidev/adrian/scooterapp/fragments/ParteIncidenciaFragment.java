@@ -1,8 +1,12 @@
 package com.kidev.adrian.scooterapp.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.activities.MenuActivity;
 import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 import com.kidev.adrian.scooterapp.inteface.IOnQrDetected;
+import com.kidev.adrian.scooterapp.model.ScooterViewModel;
 import com.kidev.adrian.scooterapp.util.AndroidUtil;
 import com.kidev.adrian.scooterapp.util.ConectorTCP;
 import com.kidev.adrian.scooterapp.util.Util;
@@ -33,10 +38,14 @@ public class ParteIncidenciaFragment extends Fragment {
     private EditText editDescripcion;
     private Button botonEnviar;
 
+    //TODO: Meter en un viewModel
     private int tipoIncidencia;
+    private Integer codigoScooter;
     private LatLng clientePosicion;
 
     private MenuActivity menuActivity;
+
+    private boolean creado = false;
 
     public ParteIncidenciaFragment() {
         // Required empty public constructor
@@ -70,7 +79,7 @@ public class ParteIncidenciaFragment extends Fragment {
                 menuActivity.showCameraQr(new IOnQrDetected() {
                     @Override
                     public void onQrDetected(String message) {
-                        String[] splitted = message.split("[=]");
+                        String[] splitted = message.split("[:]");
                         if (splitted.length==2&&splitted[0].equals("SC")){
                             editCodigo.setText(splitted[1]);
                         } else {
@@ -80,32 +89,51 @@ public class ParteIncidenciaFragment extends Fragment {
                 });
             }
         });
+
+        // Para obtener la posición
+        ViewModelProviders.of(getActivity()).get(ScooterViewModel.class).getTuPosicion().observe(getActivity(), new Observer<LatLng>() {
+            @Override
+            public void onChanged(@Nullable LatLng latLng) {
+                clientePosicion = latLng;
+                String direccion = AndroidUtil.getStreetName(getActivity(), clientePosicion.latitude, clientePosicion.longitude);
+                textoCalle.setText(direccion);
+            }
+        });
+
+        creado=true;
+        generarParte();
+
         return root;
     }
 
-    public void configurarParte (int codigoParte, Integer codigoScooter, LatLng clientePosicion) {
-        linearCodigo.setVisibility(codigoScooter!=null?View.VISIBLE:View.GONE);
+    private void generarParte() {
+        linearCodigo.setVisibility(codigoScooter!=null?View.GONE:View.VISIBLE);
         editCodigo.setText(codigoScooter!=null?codigoScooter.toString():"");
 
-        String titulo = getTipoIncidencia(codigoParte);
+        String titulo = getTipoIncidencia(tipoIncidencia);
         textoTitulo.setText(titulo);
-
-        this.tipoIncidencia = codigoParte;
-        this.clientePosicion = clientePosicion;
 
         if (clientePosicion!=null) {
             String direccion = AndroidUtil.getStreetName(getActivity(), clientePosicion.latitude, clientePosicion.longitude);
+            textoCalle.setText(direccion);
         } else {
             textoCalle.setText("Calle desconocida");
         }
 
-
-
         editDescripcion.setText("");
     }
 
-    public void configurarParte (int codigoParte, LatLng clientePosicion) {
-        configurarParte(codigoParte, null, clientePosicion);
+    public void configurarParte (int codigoParte, Integer codigoScooter) {
+        this.tipoIncidencia = codigoParte;
+        this.codigoScooter = codigoScooter;
+
+        if (creado)
+            generarParte();
+    }
+
+    public void configurarParteWithPosition (int codigoParte, LatLng clientePosicion) {
+        configurarParte(codigoParte, null);
+        this.clientePosicion = clientePosicion;
     }
 
     public void cerrarParte () {

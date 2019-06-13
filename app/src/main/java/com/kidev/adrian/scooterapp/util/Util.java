@@ -359,17 +359,19 @@ public class Util {
     private static String[] decode (String cadena) {
         return desencriptar(encriptacion,cadena).replace("\0","").split(separator);
     }
-    
+
     // Es probable que dentro del texto contenga información que pueda corromperse
     // debido a la estructura interna de la trama de datos, por eso lo vamos a sustituir
     // usando un sistema de entidades parecidas a la que utiliza HTML
     private static String transformarKeyValue (String texto) {
-        return texto.replaceAll("[&]", "&a").replaceAll("["+separatorArgs+"]", "&d")/*.replaceAll("[{]", "&i").replaceAll("[}]", "&f")*/.replaceAll("[|]", "&p").replaceAll("["+separator+"]", "&c");
+        if (texto==null) return null;
+        return texto.replaceAll("[&]", "&a").replaceAll("\n", "&s").replaceAll("["+separatorArgs+"]", "&d")/*.replaceAll("[{]", "&i").replaceAll("[}]", "&f")*/.replaceAll("[|]", "&p").replaceAll("["+separator+"]", "&c");
     }
-    
+
     // Vuelve a convertir de las entidades al que habia antes
     private static String destransformarKeyValue (String texto) {
-        return texto.replaceAll("&c", separator).replaceAll("&p", "|")/*.replaceAll("&f", "}").replaceAll("&i", "{")*/.replaceAll("&d", separatorArgs).replaceAll("[&]", "&a");
+        if (texto==null) return null;
+        return texto.replaceAll("&c", separator).replaceAll("&p", "|")/*.replaceAll("&f", "}").replaceAll("&i", "{")*/.replaceAll("&d", separatorArgs).replaceAll("&s", "\n").replaceAll("[&]", "&a");
     }
     
     /**

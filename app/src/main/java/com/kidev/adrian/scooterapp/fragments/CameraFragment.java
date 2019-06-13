@@ -74,13 +74,6 @@ public class CameraFragment extends Fragment {
                                 new Runnable() {
                                     @Override
                                     public void run() {
-                                        Vibrator vibrator = (Vibrator) getActivity().getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                                        try {
-                                            vibrator.vibrate(500);
-                                        } catch (NullPointerException e ){
-                                            Log.e("Error vibracion MAP", "No se ha podido vibrar: " + e.getMessage());
-                                        }
-
                                         if (callback!=null)
                                             callback.onQrDetected("SC:" + message);
                                     }

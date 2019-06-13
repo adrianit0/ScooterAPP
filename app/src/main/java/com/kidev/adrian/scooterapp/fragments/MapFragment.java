@@ -4,6 +4,7 @@ import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -55,6 +58,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     private MapView mMapView;
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
     private ScooterViewModel scooterViewModel;
 
     private MenuActivity menuActivity;
@@ -97,7 +101,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         markers = new ArrayList<>();
 
         menuActivity = (MenuActivity) getActivity();
-        scooterViewModel = ViewModelProviders.of(this).get(ScooterViewModel.class);
+        scooterViewModel = ViewModelProviders.of(getActivity()).get(ScooterViewModel.class);
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Surfaces
         surface = view.findViewById(R.id.include);
@@ -286,7 +292,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         scooterViewModel.getTuPosicion().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable LatLng latLng) {
-                Log.e("POS ENCONTRADA MAP", "Lat: " + latLng.latitude + " Lon: "+ latLng.longitude);
+                //TODO: Si está en alquiler modificar el valor
             }
         });
 
@@ -393,16 +399,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void getDeviceLocation() {
         try {
             if (permisoLocalizacion) {
-                Task locationResult = null;//mFusedLocationProviderClient.getLastLocation();
+                Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 if (locationResult!=null) {
                     locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if (task.isSuccessful()) {
                                 // Set the map's camera position to the current location of the device.
-                                myLastPosition = (LatLng) task.getResult();
+                                Location location = (Location) task.getResult();
+                                myLastPosition = new LatLng(location.getLatitude(), location.getLongitude());
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(myLastPosition.latitude, myLastPosition.longitude), 40));
-                                Log.e("MAP Tu posicion","TU POSICION: " + myLastPosition.latitude + " - " + myLastPosition.longitude );
+                                scooterViewModel.changePosition(myLastPosition);
                             } else {
                                 Log.d(TAG, "Current location is null. Using defaults.");
                                 Log.e(TAG, "Exception: %s", task.getException());
@@ -475,8 +482,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             //TODO: Cambiar la foto según que modelo sea
             matriculaText.setText(scooter.getCodigo() + " - Scooter Modelo 1");
 
-            // TODO: Poner la diferencia entre la scooter y tu
-            distanciaText.setText("?m");
+            LatLng scooterPos = scooterSeleccionada.getPosicion();
+            if (myLastPosition!=null && scooterPos!=null) {
+                int distancia = AndroidUtil.getDistanceBetweenTwoPoints(myLastPosition, scooterPos);
+                distanciaText.setText(distancia + "m");
+            } else {
+                distanciaText.setText("?m");
+            }
 
             calleText.setText(scooter.getDireccion());
         } else {
@@ -655,8 +667,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         //TODO: Cambiar la foto según que modelo sea
         matriculaText.setText(scooterReservada.getCodigo() + " - Scooter Modelo 1");
 
-        // TODO: Poner la diferencia entre la scooter y tu
-        distanciaText.setText("?m");
+        cambiarDistanciaScooter(scooterReservada, distanciaText);
 
         calleText.setText(scooterReservada.getDireccion());
 
@@ -669,10 +680,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         }
     }
 
-    //==============
-    // Para evitar el código spaguettis, al cambiar de estado se pondrá todas las ventanas
-    // solas para evitar de tener que hacerlo manualmente en cada estado.
-    //==============
+    private void cambiarDistanciaScooter (Scooter scooter, TextView distanciaText) {
+        LatLng scooterPos = scooterSeleccionada.getPosicion();
+        if (myLastPosition!=null && scooter!=null) {
+            int distancia = AndroidUtil.getDistanceBetweenTwoPoints(myLastPosition, scooterPos);
+            distanciaText.setText(distancia + "m");
+        } else {
+            distanciaText.setText("?m");
+        }
+    }
+
+    //====================================================================================
+    // Para evitar el código espagueti, al cambiar de estado se ocultaran todas las ventanas
+    // solas para evitar de tener que hacerlo manualmente en cada estado y que cada uno se
+    // encargue de abrir las suyas necesarias.
+    //====================================================================================
 
     private void cambiarEstado (EstadoAlquiler estado) {
         cambiarEstado(estado, 0);

@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.entities.Cliente;
 import com.kidev.adrian.scooterapp.fragments.CameraFragment;
@@ -33,6 +34,7 @@ import com.kidev.adrian.scooterapp.fragments.HelpFragment;
 import com.kidev.adrian.scooterapp.fragments.IncidenciaFragment;
 import com.kidev.adrian.scooterapp.fragments.MapFragment;
 import com.kidev.adrian.scooterapp.fragments.PackFragment;
+import com.kidev.adrian.scooterapp.fragments.ParteIncidenciaFragment;
 import com.kidev.adrian.scooterapp.fragments.UserFragment;
 import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 import com.kidev.adrian.scooterapp.inteface.IOnQrDetected;
@@ -59,6 +61,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
     private MapFragment mapFragment;
     private UserFragment userFragment;
     private IncidenciaFragment incidenciaFragment;
+    private ParteIncidenciaFragment parteIncidenciaFragment;
     private HelpFragment helpFragment;
     private PackFragment packFragment;
     private CameraFragment cameraFragment;
@@ -79,6 +82,13 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         Intent i = getIntent();
         String token = i.getStringExtra("token");
 
+        mapFragment = new MapFragment();
+        userFragment = new UserFragment();
+        incidenciaFragment = new IncidenciaFragment();
+        parteIncidenciaFragment = new ParteIncidenciaFragment();
+        helpFragment = new HelpFragment();
+        packFragment = new PackFragment();
+        cameraFragment = new CameraFragment();
 
         usuario = new Cliente();
         usuario.setNick(i.getStringExtra("nick"));
@@ -90,7 +100,8 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         usuario.setMinutos(Integer.parseInt(i.getStringExtra("minutos")));
         usuario.setFechaCreacion(i.getStringExtra("fechaCreacion"));
 
-        // Para el bundle map
+        // Para el bundle del Fragment Map
+        // Le envía el estado en el que se encuentra el alquiler.
         Bundle mapBundle = new Bundle();
         int estadoAlquiler = Integer.parseInt(i.getStringExtra("state"));
         mapBundle.putInt("state", estadoAlquiler);
@@ -101,13 +112,9 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
             mapBundle.putLong("time", time);
             mapBundle.putInt("scooterID", idScooter.intValue());
         }
+        mapFragment.setArguments(mapBundle);
         // Fin bundle map
-        mapFragment = (MapFragment) MapFragment.instantiate(getApplicationContext(), MapFragment.class.getName(), mapBundle);
-        userFragment = new UserFragment();
-        incidenciaFragment = new IncidenciaFragment();
-        helpFragment = new HelpFragment();
-        packFragment = new PackFragment();
-        cameraFragment = new CameraFragment();
+
 
         ConectorTCP conector = ConectorTCP.getInstance();
 
@@ -152,7 +159,9 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
             drawer.closeDrawer(GravityCompat.START);
         } else if (lastTag.equals("camera")) { //TODO: Meter en constante
             closeCameraQr();
-        } else {
+        } else if(lastTag.equals("parteIncidencia")) { //TODO: Meter en constante
+            mostrarFragmentByTag("incidencia", false);
+        }else {
             preguntarDesconectar();
         }
     }
@@ -235,6 +244,11 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
                 AndroidUtil.crearToast(activity,"No se ha podido desconectar del servidor. " + contenido.get("error"));
             }
         });
+    }
+
+    public void openParteIncidencia (int codigoParte, Integer codigoScooter) {
+        mostrarFragment(R.id.contenedor, parteIncidenciaFragment, "parteIncidencia", true);
+        parteIncidenciaFragment.configurarParte(codigoParte, codigoScooter);
     }
 
     // Abre la cámara Qr

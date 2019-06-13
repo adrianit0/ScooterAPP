@@ -10,12 +10,14 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.activities.MainActivity;
 import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
@@ -27,6 +29,13 @@ import java.util.Locale;
 public class AndroidUtil {
 
     private static Geocoder geocoder;
+
+    public static int getDistanceBetweenTwoPoints (LatLng pos1, LatLng pos2) {
+        float[] resultados = new float[1];
+        Location.distanceBetween(pos1.latitude, pos1.longitude, pos2.latitude, pos2.longitude, resultados);
+        int distancia = Math.round(resultados[0]);
+        return distancia;
+    }
 
     public static String getStreetName (Activity activity, double latitude, double longitude) {
         if (geocoder==null)
