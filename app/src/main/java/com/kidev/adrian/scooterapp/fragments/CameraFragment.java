@@ -105,7 +105,6 @@ public class CameraFragment extends Fragment {
         surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                //TODO: Cambiar el Request code
                 ((MenuActivity) getActivity()).pedirPermiso(Manifest.permission.CAMERA, 10, new IOnRequestPermission() {
                     @Override
                     public void onPermissionAccepted(String permiso) {
@@ -115,8 +114,6 @@ public class CameraFragment extends Fragment {
                                 AndroidUtil.crearDialog(getActivity(), "Error", "Se ha producido un error al inicializar la cámara: No tienes suficientes permisos.", null);
                                 return;
                             }
-                            // TODO: Eliminar
-                            AndroidUtil.crearToast(getActivity(), "Aceptado");
                             camera.start(surfaceView.getHolder());
                         } catch (IOException e) {
                             AndroidUtil.crearDialog(getActivity(), "Error", "Se ha producido un error al inicializar la cámara: " + e.getMessage(), null);

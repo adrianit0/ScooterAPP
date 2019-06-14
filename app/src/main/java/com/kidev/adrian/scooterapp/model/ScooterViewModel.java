@@ -118,7 +118,7 @@ public class ScooterViewModel extends AndroidViewModel {
         } else {
             parametros.put("id", scooterID.toString());
             List<Scooter> scooters = new ArrayList<>();
-            ConectorTCP.getInstance().realizarConexion("getScooterById", parametros, new CallbackRespuesta() {
+            ConectorTCP.getInstance().realizarConexion(activity,"getScooterById", parametros, new CallbackRespuesta() {
                 @Override
                 public void success(Map<String, String> contenido) {
                     int id = Integer.parseInt(contenido.get("id"));
@@ -154,7 +154,7 @@ public class ScooterViewModel extends AndroidViewModel {
     }
 
     private void traerScooters (Map<String,String> parametros, final Activity activity) {
-        ConectorTCP.getInstance().realizarConexion("getScooters", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(activity,"getScooters", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 int length = Integer.parseInt(contenido.get("length"));

@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Configuración previa de la IP
-        // TODO: Eliminar
         String serverHost = ConectorTCP.getHostServerName();
         AndroidUtil.crearInputDialog(this, "Introducir IP", serverHost, new IOnInputDialog() {
             @Override
@@ -69,26 +68,25 @@ public class MainActivity extends AppCompatActivity {
         TextView textoNick = findViewById(R.id.nickLogin);
         TextView textoPass = findViewById(R.id.passLogin);
 
-        //TODO: Pasar a la constante de idioma
         if (textoNick.getText().toString().isEmpty()) {
-            AndroidUtil.crearErrorDialog(this, "Debes introducir el nick");
+            AndroidUtil.crearErrorDialog(this, getApplicationContext().getString(R.string.error_nick));
+            return;
         } else if (textoPass.getText().toString().isEmpty()) {
-            AndroidUtil.crearErrorDialog(this, "Debes introducir la pass");
+            AndroidUtil.crearErrorDialog(this, getApplicationContext().getString(R.string.error_pass));
+            return;
         }
 
         Map<String,String> parametros = new HashMap<>();
         parametros.put("nick", textoNick.getText().toString());
-        parametros.put("pass", textoPass.getText().toString());
+        parametros.put("pass", Util.getMd5(textoPass.getText().toString()));
 
         loginButton.setEnabled(false);
 
         final Activity activity = this;
 
-        ConectorTCP.getInstance().realizarConexion("login", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(this,"login", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
-                Log.i("Conexión exitosa", "La conexión se ha realizado satisfactoriamente");
-
                 Intent intent = new Intent(getApplication(), MenuActivity.class);
                 for (Map.Entry<String, String> entry : contenido.entrySet()) {
                     intent.putExtra(entry.getKey(), entry.getValue());
@@ -99,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
-                Log.e("Error de conexión", codigoError.toString());
                 AndroidUtil.crearErrorDialog(activity, contenido.get("error"));
                 loginButton.setEnabled(true);
             }

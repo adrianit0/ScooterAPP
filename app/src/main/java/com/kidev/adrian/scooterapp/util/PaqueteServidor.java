@@ -5,6 +5,8 @@
  */
 package com.kidev.adrian.scooterapp.util;
 
+import android.app.Activity;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -18,6 +20,7 @@ import com.kidev.adrian.scooterapp.inteface.IPaquete;
  * @author agarcia.gonzalez
  */
 public class PaqueteServidor implements IPaquete {
+    private Activity activity;
     private String idPaquete;
     private String nick;
     private String token;
@@ -39,6 +42,14 @@ public class PaqueteServidor implements IPaquete {
         this.uri = uri;
         this.argumentos = argumentos;
         this.objetos = new TreeMap<>();
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     public CallbackRespuesta getCallback() {

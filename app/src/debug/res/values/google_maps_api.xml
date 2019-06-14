@@ -1,7 +1,5 @@
 <resources>
     <!--
-    TODO: Before you run your application, you need a Google Maps API key.
-
     To get one, follow this link, follow the directions and press "Create" at the end:
 
     https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=F5:51:9F:EC:29:FE:2B:96:25:A2:0C:41:B7:51:CE:1E:C9:09:14:1D%3Bcom.kidev.adrian.scooterapp.activities

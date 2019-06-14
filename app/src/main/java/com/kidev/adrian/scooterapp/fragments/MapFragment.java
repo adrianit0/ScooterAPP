@@ -154,7 +154,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     parametros.put("noSerie", scooterSeleccionada.getNoSerie()+"");
                     botonReservar.setEnabled(false);
 
-                    ConectorTCP.getInstance().realizarConexion("reservar", parametros, new CallbackRespuesta() {
+                    ConectorTCP.getInstance().realizarConexion(getActivity(),"reservar", parametros, new CallbackRespuesta() {
                         @Override
                         public void success(Map<String, String> contenido) {
                             realizarReserva();
@@ -192,7 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                         parametros.put("noSerie", scooterViewModel.getScooterReservada().getNoSerie()+"");
                         parametros.put("codigo", code);
 
-                        ConectorTCP.getInstance().realizarConexion("alquilar", parametros, new CallbackRespuesta() {
+                        ConectorTCP.getInstance().realizarConexion(getActivity(),"alquilar", parametros, new CallbackRespuesta() {
                             @Override
                             public void success(Map<String, String> contenido) {
                                 empezarAlquiler();
@@ -219,45 +219,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         botonFinAlquiler.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                AndroidUtil.crearAcceptDialog(getActivity(), "Confirmación", "¿Quieres finalizar el viaje?", new DialogInterface.OnClickListener() {
+            AndroidUtil.crearAcceptDialog(getActivity(), "Confirmación", "¿Quieres finalizar el viaje?", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                View view = getLayoutInflater().inflate(R.layout.surface_aviso_alquiler, null);
+                AndroidUtil.crearViewDialog(getActivity(), view, "Confirmación", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        View view = getLayoutInflater().inflate(R.layout.surface_aviso_alquiler, null);
-                        AndroidUtil.crearViewDialog(getActivity(), view, "Confirmación", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                botonFinAlquiler.setEnabled(false);
-                                Map<String,String> parametros = new HashMap<>();
-                                ConectorTCP.getInstance().realizarConexion("finalizar", parametros, new CallbackRespuesta() {
-                                    @Override
-                                    public void success(Map<String, String> contenido) {
-                                        mostrarInfoAlquiler (contenido);
-                                        finalizarAlquiler();
-                                    }
+                    botonFinAlquiler.setEnabled(false);
+                    Map<String,String> parametros = new HashMap<>();
+                    ConectorTCP.getInstance().realizarConexion(getActivity(),"finalizar", parametros, new CallbackRespuesta() {
+                        @Override
+                        public void success(Map<String, String> contenido) {
+                            mostrarInfoAlquiler (contenido);
+                            finalizarAlquiler();
+                        }
 
-                                    @Override
-                                    public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
-                                        //AndroidUtil.crearToast(getActivity(), "No se ha podido finalizar el alquiler: " + contenido.get("error"));
-                                        // TODO: Mejorar esta parte
-                                        botonFinAlquiler.setEnabled(true);
-                                        AndroidUtil.crearDialog(getActivity(),"Error","No se ha posido finalizar el viaje, si necesita asistencia técnica llame al número que está localizado en la Scooter para finalizar el viaje.",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    }
-                                });
-                            }
-                        });
-                    }
-                }, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                        @Override
+                        public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                            botonFinAlquiler.setEnabled(true);
+                            AndroidUtil.crearErrorDialog(getActivity(),"No se ha posido finalizar el viaje, si necesita asistencia técnica llame al número que está localizado en la Scooter para finalizar el viaje.");
+                        }
+                    });
                     }
                 });
+            }}, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
             }
         });
 
@@ -274,7 +265,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 actualizarScooters(true);
             }
         });
-
         botonIncidencia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,7 +282,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         scooterViewModel.getTuPosicion().observe(this, new Observer<LatLng>() {
             @Override
             public void onChanged(@Nullable LatLng latLng) {
-                //TODO: Si está en alquiler modificar el valor
+                Scooter scooter = scooterViewModel.getScooterReservada();
+                if (scooter!=null) {
+                    int distancia = AndroidUtil.getDistanceBetweenTwoPoints(scooter.getPosicion(), latLng);
+                    TextView text = surfaceReserva.findViewById(R.id.textoDistancia);
+                    text.setText(distancia+"m");
+                }
             }
         });
 
@@ -330,8 +325,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
         }
         // obtenemos el tiempo actual
-        //TODO: Poner más bonito
-        int timeRemain = (int) ((new Date(System.currentTimeMillis())).getTime() - (new Date(scooterViewModel.getTimeRemain())).getTime()) / 1000;
+        long actualTime = new Date(System.currentTimeMillis()).getTime();
+        long scooterTime = new Date(scooterViewModel.getTimeRemain()).getTime();
+        int timeRemain = (int) ((actualTime-scooterTime)/1000);
 
         cambiarEstado(estado, timeRemain);
 
@@ -523,7 +519,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         Log.e("map", "Se ha cancelado la reserva");
 
-        ConectorTCP.getInstance().realizarConexion("cancelarReserva", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(getActivity(),"cancelarReserva", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 cancelarReserva();
@@ -570,7 +566,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         // TODO: Cambiar el modelo por el que sea de verdad
         textoModelo.setText(scooterViewModel.getScooterReservada().getMatricula() + " - Modelo 1");
-        // TODO: Meter en constantes
+
         textoMinutosConducidos.setText(minutosConducidos + " minutos");
         textoMinutosConsumidos.setText(minutosConsumidos + " minutos");
         textoMinutosRestantes.setText(minutosRestantes + " minutos");
@@ -681,20 +677,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     private void cambiarDistanciaScooter (Scooter scooter, TextView distanciaText) {
-        LatLng scooterPos = scooterSeleccionada.getPosicion();
         if (myLastPosition!=null && scooter!=null) {
+            LatLng scooterPos = scooter.getPosicion();
             int distancia = AndroidUtil.getDistanceBetweenTwoPoints(myLastPosition, scooterPos);
             distanciaText.setText(distancia + "m");
         } else {
             distanciaText.setText("?m");
         }
     }
-
-    //====================================================================================
-    // Para evitar el código espagueti, al cambiar de estado se ocultaran todas las ventanas
-    // solas para evitar de tener que hacerlo manualmente en cada estado y que cada uno se
-    // encargue de abrir las suyas necesarias.
-    //====================================================================================
 
     private void cambiarEstado (EstadoAlquiler estado) {
         cambiarEstado(estado, 0);
@@ -709,8 +699,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 abrirEstadoNormal();
                 break;
             case RESERVA:
-                //TODO: Meter contenido en una constante
-                abrirEstadoReserva(900-initTime);
+                int tiempoActual = 900-initTime;
+                abrirEstadoReserva(tiempoActual);
                 break;
             case ALQUILER:
                 abrirEstadoAlquiler(initTime);
@@ -741,8 +731,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         if (cronometro!=null)
             cronometro.finalizar();
 
-        //TODO: Almacenar en Strings
-        textViewTituloContador.setText("Tiempo restante:");
+        textViewTituloContador.setText(getContext().getString(R.string.alquiler_reserva_titulo));
         cronometro = new Cronometro(textViewContador, tiempoRestante, new IOnTimeFinished() {
             @Override
             public void timeFinished() {
@@ -762,8 +751,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         if (cronometro!=null)
             cronometro.finalizar();
 
-        //TODO: Almacenar en constantes String
-        textViewTituloContador.setText("Tiempo alquiler:");
+        textViewTituloContador.setText(getContext().getString(R.string.alquiler_alquiler_titulo));
         cronometro=new Cronometro(textViewContador, initTime);
         cronometro.ejecutar();
     }

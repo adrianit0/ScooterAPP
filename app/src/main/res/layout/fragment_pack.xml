@@ -7,7 +7,6 @@
     tools:context=".fragments.PackFragment"
     android:background="@color/background">
 
-    <!-- TODO: Convertir en estilos para ser usados en otras partes de la APP -->
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraint"
         android:layout_width="match_parent"

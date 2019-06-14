@@ -1,6 +1,7 @@
 package com.kidev.adrian.scooterapp.util;
 
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -82,12 +83,12 @@ public class ConectorTCP {
         ConectorTCP.hostServerName = hostServerName;
     }
 
-    public void realizarConexion (String uri, Map<String,String> parametros, CallbackRespuesta response) {
-        realizarConexion(nick,token,uri,getPaqueteID(),parametros,response);
+    public void realizarConexion (Activity activity, String uri, Map<String,String> parametros, CallbackRespuesta response) {
+        realizarConexion(activity,nick,token,uri,getPaqueteID(),parametros,response);
     }
 
     // Para tests
-    public void realizarConexion (String nick, String token, String uri, String paqueteid, Map<String,String> parametros, CallbackRespuesta response) {
+    private void realizarConexion (Activity activity, String nick, String token, String uri, String paqueteid, Map<String,String> parametros, CallbackRespuesta response) {
         // Si no existen los parametros, se crea
         if (parametros==null)
             parametros=new HashMap<>();
@@ -111,6 +112,7 @@ public class ConectorTCP {
 
         // Ponemos los valores para realizar la conexión
         PaqueteServidor paquete = new PaqueteServidor();
+        paquete.setActivity(activity);
         paquete.setIdPaquete(paqueteid);
         paquete.setNick(nick);
         paquete.setToken(token);

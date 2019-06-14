@@ -19,16 +19,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffe1e1"
-                android:text="PLACEHOLDER DEL LOGO"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:padding="20dp"
-                android:layout_margin="30dp"
-                android:gravity="center"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="120dp"
+                android:src="@drawable/titulo"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
 
             <EditText
                 android:id="@+id/nickLogin"
@@ -58,11 +56,13 @@
                 android:drawableStart="@drawable/enter_image"
             />
 
+            <!-- TODO: Activar cuando esté disponible -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 style="@style/Link"
+                android:visibility="gone"
                 android:text="@string/forgot_pass"/>
 
             <View

@@ -14,9 +14,19 @@
     app:layout_constraintBottom_toBottomOf="parent"
     >
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/moto_version_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/linearSurface"
@@ -57,16 +67,7 @@
                 android:drawableStart="@drawable/notificacion_mapa"
                 android:text="Calle Sagasta, 2, 11400, Cádiz" />
         </LinearLayout>
-
-        <ImageView
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/moto_version_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 
     <LinearLayout

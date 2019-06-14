@@ -8,6 +8,8 @@
     <string name="forgot_pass"><u>¿Has olvidado tu contraseña?</u></string>
     <string name="iniciar_sesion">Iniciar sesion</string>
     <string name="not_account">¿Aún sin cuenta?</string>
+    <string name="error_nick">Debes introducir el nick</string>
+    <string name="error_pass">Debes introducir la pass</string>
     <!-- Register -->
     <string name="terminos_condiciones">He leido y acepto los términos y condiciones.</string>
     <string name="repeat_pass">Repite contraseña</string>
@@ -26,7 +28,19 @@
     <string name="nav_header_desc">Cabecera</string>
     <string name="action_settings">Ajustes</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Alquiler -->
+    <string name="alquiler_reserva_titulo">Tiempo restante:</string>
+    <string name="alquiler_alquiler_titulo">Tiempo alquiler:</string>
+
+    <!-- Fragments -->
+    <string name="fragment_map">map</string>
+    <string name="fragment_perfil">perfil</string>
+    <string name="fragment_incidencia">incidencia</string>
+    <string name="fragment_parte">parte</string>
+    <string name="fragment_pack">pack</string>
+    <string name="fragment_help">help</string>
+    <string name="fragment_camera">camera</string>
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_map_test">Map</string>
     <string name="title_activity_maps_test2">Map</string>

@@ -55,7 +55,7 @@ public class PackFragment extends Fragment {
         final Cliente cliente = menuActivity.getUsuario();
 
 
-        ConectorTCP.getInstance().realizarConexion("getBonos", null, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(getActivity(), "getBonos", null, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 int length  = Integer.parseInt(contenido.get("length"));
@@ -111,10 +111,9 @@ public class PackFragment extends Fragment {
         parametros.put("idCliente", cliente.getId()+"");
         parametros.put("idBono", bono.getId()+"");
 
-        //TODO: Poner bonito
         final MenuActivity activity = (MenuActivity) getActivity();
 
-        ConectorTCP.getInstance().realizarConexion("aumentarBonos", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(getActivity(),"aumentarBonos", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 int totales = Integer.parseInt(contenido.get("minutosTotales"));
@@ -123,7 +122,6 @@ public class PackFragment extends Fragment {
 
                 textoMinutos.setText(cliente.getMinutos()+"");
 
-                // TODO: Poner bonito
                 activity.actualizarMinutos(cliente.getMinutos());
             }
 

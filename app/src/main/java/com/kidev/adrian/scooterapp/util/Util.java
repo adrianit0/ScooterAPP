@@ -14,6 +14,7 @@ import android.text.InputType;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.kidev.adrian.scooterapp.exception.CifrarMD5Exception;
 import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
 import com.kidev.adrian.scooterapp.inteface.IPaquete;
@@ -22,6 +23,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -441,4 +445,20 @@ public class Util {
         return parametros;
     }
 
+    /**
+     * Convierte un texto plano en el cifrado MD5
+     * */
+    public static String getMd5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger no = new BigInteger(1, messageDigest);
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32)
+                hashtext = "0" + hashtext;
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new CifrarMD5Exception(e);
+        }
+    }
 }

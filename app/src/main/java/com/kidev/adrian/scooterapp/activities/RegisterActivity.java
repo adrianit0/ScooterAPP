@@ -76,9 +76,9 @@ public class RegisterActivity extends AppCompatActivity {
         parametros.put("nombre", textoNombre.getText().toString());
         parametros.put("apellido1", textoApellidos.getText().toString());
         parametros.put("email", textoEmail.getText().toString());
-        parametros.put("pass", textoPass1.getText().toString());
+        parametros.put("pass", Util.getMd5(textoPass1.getText().toString()));
 
-        ConectorTCP.getInstance().realizarConexion("register", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(this,"register", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 Log.e("Registrado", contenido.get("nick") + " se ha registrado correctamente");

@@ -157,7 +157,7 @@ public class ParteIncidenciaFragment extends Fragment {
         parametros.put("tipoIncidencia", tipoIncidencia+"");
         parametros.put("descripcion", editDescripcion.getText().toString());
 
-        ConectorTCP.getInstance().realizarConexion("enviarIncidencia", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(getActivity(),"enviarIncidencia", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 AndroidUtil.crearDialog(getActivity(), "Confirmacion", "Se ha enviado el parte de incidencia correctamente", new DialogInterface.OnClickListener() {
@@ -181,7 +181,6 @@ public class ParteIncidenciaFragment extends Fragment {
 
     }
 
-    //TODO: Meter en constantes
     private String getTipoIncidencia (int codigo) {
         switch (codigo) {
             case 1:

@@ -121,16 +121,6 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         conector.setNick(usuario.getNick());
         conector.setToken(token);
 
-        // TODO: Borrar botón flotante
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
         // Deslizador
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -146,7 +136,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         // FragmentManager
         String tag = scooterViewModel.getActualFragment();
         if (tag==null) {
-            mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
+            mostrarFragment(R.id.contenedor, mapFragment, getApplicationContext().getString(R.string.fragment_map), false);
         } else {
             mostrarFragmentByTag(tag, false);
         }
@@ -157,10 +147,10 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (lastTag.equals("camera")) { //TODO: Meter en constante
+        } else if (lastTag.equals(getApplicationContext().getString(R.string.fragment_camera))) {
             closeCameraQr();
-        } else if(lastTag.equals("parteIncidencia")) { //TODO: Meter en constante
-            mostrarFragmentByTag("incidencia", false);
+        } else if(lastTag.equals(getApplicationContext().getString(R.string.fragment_parte))) {
+            mostrarFragmentByTag(getApplicationContext().getString(R.string.fragment_incidencia), false);
         }else {
             preguntarDesconectar();
         }
@@ -195,15 +185,15 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         int id = item.getItemId();
 
         if (id == R.id.nav_alquiler) {
-            mostrarFragment(R.id.contenedor, mapFragment, "mapa", false);
+            mostrarFragment(R.id.contenedor, mapFragment, getApplicationContext().getString(R.string.fragment_map), false);
         } else if (id == R.id.nav_perfil) {
-            mostrarFragment(R.id.contenedor, userFragment, "user", false);
+            mostrarFragment(R.id.contenedor, userFragment, getApplicationContext().getString(R.string.fragment_perfil), false);
         } else if (id == R.id.nav_incidencia) {
-            mostrarFragment(R.id.contenedor, incidenciaFragment, "incidencia", false);
-        } else if (id == R.id.nav_help) {
-            mostrarFragment(R.id.contenedor, helpFragment, "help", false);
+            mostrarFragment(R.id.contenedor, incidenciaFragment, getApplicationContext().getString(R.string.fragment_incidencia), false);
+        //} else if (id == R.id.nav_help) {
+        //    mostrarFragment(R.id.contenedor, helpFragment, getApplicationContext().getString(R.string.fragment_help), false);
         } else if (id == R.id.nav_bonos) {
-            mostrarFragment(R.id.contenedor, packFragment, "pack", false);
+            mostrarFragment(R.id.contenedor, packFragment, getApplicationContext().getString(R.string.fragment_pack), false);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_disconnect) {
@@ -232,7 +222,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
     private void desconectar () {
         final Activity activity = this;
         Map<String,String> parametros = new HashMap<>();
-        ConectorTCP.getInstance().realizarConexion("desconectar", parametros, new CallbackRespuesta() {
+        ConectorTCP.getInstance().realizarConexion(this,"desconectar", parametros, new CallbackRespuesta() {
             @Override
             public void success(Map<String, String> contenido) {
                 Intent intent = new Intent(getApplication(), MainActivity.class);
@@ -247,14 +237,14 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
     }
 
     public void openParteIncidencia (int codigoParte, Integer codigoScooter) {
-        mostrarFragment(R.id.contenedor, parteIncidenciaFragment, "parteIncidencia", true);
+        mostrarFragment(R.id.contenedor, parteIncidenciaFragment, getApplicationContext().getString(R.string.fragment_parte), true);
         parteIncidenciaFragment.configurarParte(codigoParte, codigoScooter);
     }
 
     // Abre la cámara Qr
     public void showCameraQr (IOnQrDetected callback) {
         preCameraTag = lastTag;
-        mostrarFragment(R.id.contenedor, cameraFragment, "camera", true);
+        mostrarFragment(R.id.contenedor, cameraFragment, getApplicationContext().getString(R.string.fragment_camera), true);
         cameraFragment.openCamera(callback);
     }
 
