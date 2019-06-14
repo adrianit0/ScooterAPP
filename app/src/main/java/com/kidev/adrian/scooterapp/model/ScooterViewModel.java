@@ -40,6 +40,7 @@ public class ScooterViewModel extends AndroidViewModel {
         super(application);
     }
 
+
     public LiveData<List<Scooter>> getScooters (Activity activity, double latitude, double longitude, boolean forzar) {
         if (forzar || scooters==null) {
             scooters = new MutableLiveData<>();

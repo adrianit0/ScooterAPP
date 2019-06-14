@@ -608,6 +608,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         scooterViewModel.getScooters(getActivity(), latitude, longitude, forzar).observe(getActivity(), new Observer<List<Scooter>>() {
             @Override
             public void onChanged(@Nullable List<Scooter> scooters) {
+                Log.e("MAP test", "SE HA ACTUALIZADO EL OBSERVER");
                 Scooter scooterReservada = scooterViewModel.getScooterReservada();
 
                 LatLng pos = new LatLng(0,0);

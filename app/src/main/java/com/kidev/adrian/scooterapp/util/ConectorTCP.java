@@ -43,7 +43,7 @@ public class ConectorTCP {
     private static ConectorTCP instance;
 
     private final long TIMEOUT = 30000;
-    private static String hostServerName="192.168.0.155";//"192.168.43.229";//"192.168.1.132";
+    private static String hostServerName="192.168.0.161";//"192.168.43.229";//"192.168.1.132";
     private final int port = 4444;
 
     // Test values
