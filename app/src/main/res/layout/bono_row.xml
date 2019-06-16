@@ -8,19 +8,6 @@
     android:background="@drawable/ripple"
     android:id="@+id/linear"
     >
-
-    <TextView
-        android:id="@+id/precioBono"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
-        android:text="11€"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="28sp"
-        android:textColor="@color/onSecundary"
-        />
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -50,17 +37,17 @@
             android:textSize="16sp"
             android:textColor="@color/onSecundary"
             />
-
     </LinearLayout>
-
     <TextView
+        android:id="@+id/precioBono"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.2"
-        android:text=""
+        android:layout_weight="0.4"
+        android:text="11€"
         android:textStyle="bold"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="28sp"
         android:textColor="@color/onSecundary"
         />
+
 </LinearLayout>
