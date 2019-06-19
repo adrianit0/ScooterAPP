@@ -3,6 +3,7 @@ package com.kidev.adrian.scooterapp.util;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
+import com.kidev.adrian.scooterapp.inteface.IOnSecondTick;
 import com.kidev.adrian.scooterapp.inteface.IOnTimeFinished;
 
 
@@ -49,10 +50,10 @@ public class Cronometro{
         };
     }
 
-    public Cronometro (TextView texto, int initSeconds) {
+    public Cronometro (TextView texto, int initSeconds, IOnSecondTick callback) {
         this(texto, initSeconds, false, null);
 
-        upTimer = new CountUpTimer(Long.MAX_VALUE, initSeconds) {
+        upTimer = new CountUpTimer(Long.MAX_VALUE, initSeconds, callback) {
             @Override
             public void onTick(int second) {
                 final int min = second/60;

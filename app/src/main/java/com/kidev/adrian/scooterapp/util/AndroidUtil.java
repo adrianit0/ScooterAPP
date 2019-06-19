@@ -37,6 +37,10 @@ public class AndroidUtil {
         return distancia;
     }
 
+    public static String getStreetName (Activity activity, LatLng posicion) {
+        return getStreetName(activity, posicion.latitude, posicion.longitude);
+    }
+
     public static String getStreetName (Activity activity, double latitude, double longitude) {
         if (geocoder==null)
             geocoder = new Geocoder(activity, Locale.getDefault());

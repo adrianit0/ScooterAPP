@@ -26,14 +26,14 @@
     <string name="nav_header_title">Pepito Perez</string>
     <string name="nav_header_subtitle">pepito.perez@outlook.com</string>
     <string name="nav_header_desc">Cabecera</string>
-    <string name="action_settings">Ajustes</string>
+    <string name="action_settings">Cambiar IP</string>
 
     <!-- Alquiler -->
     <string name="alquiler_reserva_titulo">Tiempo restante:</string>
     <string name="alquiler_alquiler_titulo">Tiempo alquiler:</string>
 
     <!-- Fragments -->
-    <string name="fragment_map">map</string>
+    <string name="fragment_map">mapa</string>
     <string name="fragment_perfil">perfil</string>
     <string name="fragment_incidencia">incidencia</string>
     <string name="fragment_parte">parte</string>

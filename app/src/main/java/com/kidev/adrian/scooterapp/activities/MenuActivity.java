@@ -3,8 +3,10 @@ package com.kidev.adrian.scooterapp.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -48,12 +50,13 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MenuActivity extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Cliente usuario;
     private IOnRequestPermission mCallback;
     private ScooterViewModel scooterViewModel;
 
+    private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
 
@@ -76,7 +79,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
 
         scooterViewModel = ViewModelProviders.of(this).get(ScooterViewModel.class);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent i = getIntent();
@@ -163,20 +166,6 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -194,8 +183,8 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         //    mostrarFragment(R.id.contenedor, helpFragment, getApplicationContext().getString(R.string.fragment_help), false);
         } else if (id == R.id.nav_bonos) {
             mostrarFragment(R.id.contenedor, packFragment, getApplicationContext().getString(R.string.fragment_pack), false);
-        } else if (id == R.id.nav_share) {
-
+        //} else if (id == R.id.nav_share) {
+        //
         } else if (id == R.id.nav_disconnect) {
             preguntarDesconectar();
         }
@@ -226,6 +215,8 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
             @Override
             public void success(Map<String, String> contenido) {
                 Intent intent = new Intent(getApplication(), MainActivity.class);
+                // Eliminamos la inforación de entrada
+                intent.putExtra("restart", "true");
                 startActivity(intent);
             }
 
@@ -253,6 +244,18 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         mostrarFragmentByTag(preCameraTag, false);
     }
 
+    public IncidenciaFragment getIncidenciaFragment() {
+        return incidenciaFragment;
+    }
+
+    public PackFragment getPackFragment() {
+        return packFragment;
+    }
+
+    public void mostrarFragment(Fragment fragment, String tag, boolean addToBackStack) {
+        mostrarFragment(R.id.contenedor, fragment, tag, addToBackStack);
+    }
+
     private void mostrarFragment (int resId, Fragment fragment, String tag, boolean addToBackStack) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -270,6 +273,7 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
         else {
             transaction.add( resId, fragment, tag ).setBreadCrumbShortTitle( tag );
         }
+        toolbar.setTitle(tag.substring(0,1).toUpperCase()+tag.substring(1));
 
         if ( addToBackStack ) {
             transaction.addToBackStack( tag );
@@ -296,6 +300,8 @@ public class MenuActivity extends AppCompatActivity  implements NavigationView.O
 
         if (actualFragment!=null) {
             transaction.show( actualFragment );
+
+            toolbar.setTitle(tag.substring(0,1).toUpperCase()+tag.substring(1));
 
             if (addToBackStack){
                 transaction.addToBackStack(tag);

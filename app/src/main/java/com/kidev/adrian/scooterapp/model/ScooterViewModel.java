@@ -36,6 +36,10 @@ public class ScooterViewModel extends AndroidViewModel {
     private long timeRemain=0;
     private Integer scooterID=null;
 
+    // Para el parte de incidencia
+    private int tipoIncidencia;
+    private Integer codigoScooter;
+
     public ScooterViewModel(@NonNull Application application) {
         super(application);
     }
@@ -64,6 +68,24 @@ public class ScooterViewModel extends AndroidViewModel {
             return null;
 
         return tuPosicion.getValue();
+    }
+
+    public void setParteIncidencia (int tipoIncidencia, Integer codigoScooter) {
+        this.tipoIncidencia = tipoIncidencia;
+        this.codigoScooter = codigoScooter;
+    }
+
+    public void removeParteIncidencia () {
+        this.tipoIncidencia = 0;
+        this.codigoScooter = null;
+    }
+
+    public int getTipoIncidencia() {
+        return tipoIncidencia;
+    }
+
+    public Integer getCodigoScooter() {
+        return codigoScooter;
     }
 
     public void changePosition (LatLng posicion) {
@@ -118,7 +140,6 @@ public class ScooterViewModel extends AndroidViewModel {
             traerScooters(parametros, activity);
         } else {
             parametros.put("id", scooterID.toString());
-            List<Scooter> scooters = new ArrayList<>();
             ConectorTCP.getInstance().realizarConexion(activity,"getScooterById", parametros, new CallbackRespuesta() {
                 @Override
                 public void success(Map<String, String> contenido) {
@@ -167,6 +188,8 @@ public class ScooterViewModel extends AndroidViewModel {
                     int id = Integer.parseInt(contenido.get("id[" + i + "]"));
                     int codigo = Integer.parseInt(contenido.get("codigo[" + i + "]"));
                     String noSerie = contenido.get("noSerie[" + i + "]");
+                    String matricula = contenido.get("matricula[" + i + "]");
+                    String modelo = contenido.get("modelo[" + i + "]");
                     float bateria = Float.parseFloat(contenido.get("bateria[" + i + "]"));
                     float lat = Float.parseFloat(contenido.get("posicionLat[" + i + "]"));
                     float lon = Float.parseFloat(contenido.get("posicionLon[" + i + "]"));
@@ -177,6 +200,8 @@ public class ScooterViewModel extends AndroidViewModel {
                     scooter.setNoSerie(noSerie);
                     scooter.setPosicion(new LatLng(lat, lon));
                     scooter.setBateria(bateria);
+                    scooter.setMatricula(matricula);
+                    scooter.setModelo(modelo);
 
                     String direccion = AndroidUtil.getStreetName(activity, lat, lon);
                     scooter.setDireccion(direccion);
@@ -193,9 +218,5 @@ public class ScooterViewModel extends AndroidViewModel {
                 AndroidUtil.crearToast(activity, "No se han podido cargar las scooters");
             }
         });
-    }
-
-    private void cogerTuPosicion () {
-
     }
 }

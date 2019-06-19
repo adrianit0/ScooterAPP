@@ -36,7 +36,7 @@ public class UserFragment extends Fragment {
 
         textoNombre.setText(cliente.getNombre());
         textoApellido1.setText(cliente.getApellido1());
-        textoApellido2.setText(cliente.getApellido2());
+        textoApellido2.setText(cliente.getApellido2().equals("null") ? "" : cliente.getApellido2());
         textoNick.setText(cliente.getNick());
         textoEmail.setText(cliente.getEmail());
         textoCreacion.setText(cliente.getFechaCreacion());

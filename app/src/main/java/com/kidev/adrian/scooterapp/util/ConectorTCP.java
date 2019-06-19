@@ -4,7 +4,10 @@ package com.kidev.adrian.scooterapp.util;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import com.kidev.adrian.scooterapp.R;
 import com.kidev.adrian.scooterapp.inteface.CallbackRespuesta;
 
 import java.io.BufferedReader;
@@ -31,6 +34,7 @@ public class ConectorTCP {
 
     private boolean realizandoConexion;
     private List<PaqueteServidor> peticiones;
+    private Activity activity;
 
     private boolean conectado;
     private boolean conectando;
@@ -43,7 +47,7 @@ public class ConectorTCP {
     private static ConectorTCP instance;
 
     private final long TIMEOUT = 30000;
-    private static String hostServerName="192.168.0.161";//"192.168.43.229";//"192.168.1.132";
+    private static String hostServerName="192.168.0.157";
     private final int port = 4444;
 
     // Test values
@@ -84,23 +88,27 @@ public class ConectorTCP {
     }
 
     public void realizarConexion (Activity activity, String uri, Map<String,String> parametros, CallbackRespuesta response) {
-        realizarConexion(activity,nick,token,uri,getPaqueteID(),parametros,response);
+        realizarConexion(activity,nick,token,uri,getPaqueteID(),parametros,response,true);
+    }
+
+    public void realizarConexion (Activity activity, String uri, Map<String,String> parametros, CallbackRespuesta response, boolean activarProgressBar) {
+        realizarConexion(activity,nick,token,uri,getPaqueteID(),parametros,response,activarProgressBar);
     }
 
     // Para tests
-    private void realizarConexion (Activity activity, String nick, String token, String uri, String paqueteid, Map<String,String> parametros, CallbackRespuesta response) {
+    private void realizarConexion (Activity activity, String nick, String token, String uri, String paqueteid, Map<String,String> parametros, CallbackRespuesta response, boolean activarProgressBar) {
         // Si no existen los parametros, se crea
         if (parametros==null)
             parametros=new HashMap<>();
 
-        if (!conectado) {
+        /*if (!conectado) {
             if (!iniciar ()) {
                 //RuntimeException e = new RuntimeException ();
                 parametros.put("error", "No se ha podido realizar la conexión");
                 response.error(parametros, Util.CODIGO.notConnection);
                 return;
             }
-        }
+        }*/
 
         for(PaqueteServidor s : peticiones) {
             if (s.getUri().equals(uri)) {
@@ -120,6 +128,14 @@ public class ConectorTCP {
         paquete.setUri(uri);
         paquete.setCallback(response);
 
+        this.activity = activity;
+        if (activarProgressBar) {
+            ProgressBar barraCarga = this.activity.findViewById(R.id.progressBar);
+            if (barraCarga!=null)
+                barraCarga.setVisibility(View.VISIBLE);
+        }
+
+
         if (realizandoConexion) {
             peticiones.add(paquete);
         } else {
@@ -133,6 +149,9 @@ public class ConectorTCP {
             new RealizarConexion().execute (peticiones.remove(0));
         } else {
             realizandoConexion=false;
+            ProgressBar barraCarga = activity.findViewById(R.id.progressBar);
+            if (barraCarga!=null)
+                barraCarga.setVisibility(View.GONE);
         }
     }
 
@@ -181,6 +200,7 @@ public class ConectorTCP {
 
         @Override
         protected Void doInBackground(Void... voids) {
+
             if (conectando) {
                 Log.e("doInBackground", "Ya está conectandose");
                 return null;
@@ -201,7 +221,9 @@ public class ConectorTCP {
 
         @Override
         protected void onPostExecute(Void paquete) {
-
+            if (conectado && peticiones.size()>0) {
+                nextQuery();
+            }
         }
     }
 
@@ -214,8 +236,13 @@ public class ConectorTCP {
             if (paquetes.length!=1) {
                 throw new RuntimeException("No se ha podido realizar la conexión porque faltan paquetes");
             }
-
             paqueteServidor = paquetes[0];
+
+            // Si no está conectado almacenamos el paquete para enviarlo luego
+            if (conectado==false) {
+                peticiones.add(paqueteServidor);
+                return null;
+            }
 
             try  {
                 // Como primer valor le enviamos el nombre y nº de jugadores al servidor
@@ -261,12 +288,14 @@ public class ConectorTCP {
                 } else {
                     paqueteServidor.getCallback().error(paqueteCliente.getArgumentos(), paqueteCliente.getCodigo());
                 }
-            } else {
-                paqueteServidor.getCallback().error(paqueteCliente.getArgumentos(), Util.CODIGO.timeOut);
-            }
 
-            // Siguiente Query
-            nextQuery();
+                // Siguiente Query
+                nextQuery();
+            } /*else {
+                Map<String,String> parametros = new HashMap<>();
+                parametros.put("error", "Time out");
+                paqueteServidor.getCallback().error(parametros, Util.CODIGO.timeOut);
+            }*/
         }
     }
 }

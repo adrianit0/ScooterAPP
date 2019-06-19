@@ -11,6 +11,7 @@ public class Scooter {
     private Date fechaCompra;
     private String noSerie;
     private String matricula;
+    private String modelo;
     private Integer codigo;
     private Float bateria;
     private String direccion;
@@ -92,5 +93,13 @@ public class Scooter {
 
     public void setBateria(Float bateria) {
         this.bateria = bateria;
+    }
+
+    public String getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(String modelo) {
+        this.modelo = modelo;
     }
 }

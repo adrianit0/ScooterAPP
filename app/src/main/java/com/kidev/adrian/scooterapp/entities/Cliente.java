@@ -38,7 +38,7 @@ public class Cliente  implements java.io.Serializable {
     }
 
     public String getNombreCompleto () {
-        return nombre + " " + apellido1 + (apellido2!=null?" "+apellido2:"");
+        return nombre + " " + apellido1 + (apellido2!=null&&!apellido2.equals("null")?" "+apellido2:"");
     }
 
     public void setNombre(String nombre) {

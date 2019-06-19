@@ -38,6 +38,7 @@ import com.kidev.adrian.scooterapp.enums.EstadoAlquiler;
 import com.kidev.adrian.scooterapp.inteface.IOnInputDialog;
 import com.kidev.adrian.scooterapp.inteface.IOnQrDetected;
 import com.kidev.adrian.scooterapp.inteface.IOnRequestPermission;
+import com.kidev.adrian.scooterapp.inteface.IOnSecondTick;
 import com.kidev.adrian.scooterapp.inteface.IOnTimeFinished;
 import com.kidev.adrian.scooterapp.model.ScooterViewModel;
 import com.kidev.adrian.scooterapp.util.AndroidUtil;
@@ -75,6 +76,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private int position_permission_code = 1;
     private boolean permisoLocalizacion=false;
     private LatLng myLastPosition = null;
+    private boolean actualizandoPosition=false;
 
     private Button botonReservar;
     private Button botonCancelarReserva;
@@ -89,6 +91,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private Cronometro cronometro;
 
     private List<Marker> markers;
+    private Marker markerScooterReservada;
 
     public MapFragment() {
         // Required empty public constructor
@@ -262,20 +265,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         botonActualizar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                actualizarScooters(true);
+                actualizarScooters(true, false);
             }
         });
         botonIncidencia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menuActivity.mostrarFragmentByTag("incidencia", true);
+                menuActivity.mostrarFragment(menuActivity.getIncidenciaFragment(), getActivity().getApplicationContext().getString(R.string.fragment_incidencia), true);
             }
         });
 
         botonShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                menuActivity.mostrarFragmentByTag("pack", true);
+                menuActivity.mostrarFragment(menuActivity.getPackFragment(), getActivity().getApplicationContext().getString(R.string.fragment_pack), true);
             }
         });
 
@@ -404,13 +407,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                                 // Set the map's camera position to the current location of the device.
                                 Location location = (Location) task.getResult();
                                 myLastPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(myLastPosition.latitude, myLastPosition.longitude), 40));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom( new LatLng(myLastPosition.latitude, myLastPosition.longitude), 1500));
                                 scooterViewModel.changePosition(myLastPosition);
                             } else {
                                 Log.d(TAG, "Current location is null. Using defaults.");
                                 Log.e(TAG, "Exception: %s", task.getException());
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLastPosition, 1));
-                                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                                //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLastPosition, 1500));
+                                //mMap.getUiSettings().setMyLocationButtonEnabled(false);
                             }
                         }
                     });
@@ -426,7 +429,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private void realizarConexion () {
         permisoLocalizacion=true;
 
-        actualizarScooters(false);
+        actualizarScooters(false, true);
     }
 
     @Override
@@ -474,9 +477,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             int km = Math.round(bateria/1.8f); // Un valor random
             bateriaText.setText(bateria+ "% (~"+ km +" km)");
 
-            //TODO: Añadir tambien la versión del modelo
-            //TODO: Cambiar la foto según que modelo sea
-            matriculaText.setText(scooter.getCodigo() + " - Scooter Modelo 1");
+            matriculaText.setText(scooter.getMatricula() + " - " + scooter.getModelo());
 
             LatLng scooterPos = scooterSeleccionada.getPosicion();
             if (myLastPosition!=null && scooterPos!=null) {
@@ -549,6 +550,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             cronometro=null;
         }
         cambiarEstado(EstadoAlquiler.NADA);
+        actualizarScooters(true, false);
     }
 
     private void mostrarInfoAlquiler(Map<String,String> parametros) {
@@ -564,8 +566,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         TextView textoMinutosConsumidos = surfaceFinAlquiler.findViewById(R.id.textoBonoConsumido);
         TextView textoMinutosRestantes = surfaceFinAlquiler.findViewById(R.id.textoBonoRestante);
 
-        // TODO: Cambiar el modelo por el que sea de verdad
-        textoModelo.setText(scooterViewModel.getScooterReservada().getMatricula() + " - Modelo 1");
+        Scooter scooter = scooterViewModel.getScooterReservada();
+
+        textoModelo.setText(scooter.getMatricula() + " - " + scooter.getModelo());
 
         textoMinutosConducidos.setText(minutosConducidos + " minutos");
         textoMinutosConsumidos.setText(minutosConsumidos + " minutos");
@@ -593,7 +596,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         surfaceFinAlquiler.setVisibility(View.VISIBLE);
     }
 
-    private void actualizarScooters (boolean forzar) {
+    private void actualizarScooters (boolean forzar, final boolean moveCamera) {
         updateLocationUI();
         getDeviceLocation();
 
@@ -604,15 +607,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         for (Marker m : markers)
             m.remove();
         markers.clear();
+        if (markerScooterReservada!=null) {
+            markerScooterReservada.remove();
+            markerScooterReservada=null;
+        }
 
         scooterViewModel.getScooters(getActivity(), latitude, longitude, forzar).observe(getActivity(), new Observer<List<Scooter>>() {
             @Override
             public void onChanged(@Nullable List<Scooter> scooters) {
-                Log.e("MAP test", "SE HA ACTUALIZADO EL OBSERVER");
                 Scooter scooterReservada = scooterViewModel.getScooterReservada();
 
                 LatLng pos = new LatLng(0,0);
-
 
                 int i = 0;
                 for (Scooter scooter : scooters) {
@@ -637,13 +642,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                     marker.setTag(scooterReservada);
 
                     markers.add(marker);
+                    markerScooterReservada = marker;
 
                     cambiarTextoSurfaceReserva(scooterReservada);
                 }
 
-
-                mMap.moveCamera((CameraUpdateFactory.newLatLng(pos)));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 14), 1500, null);
+                if (moveCamera) {
+                    mMap.moveCamera((CameraUpdateFactory.newLatLng(pos)));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 14), 1500, null);
+                }
             }
         });
     }
@@ -660,9 +667,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         int km = Math.round(bateria/1.8f); // Un valor random
         bateriaText.setText(bateria+ "% (~"+ km +" km)");
 
-        //TODO: Añadir tambien la versión del modelo
-        //TODO: Cambiar la foto según que modelo sea
-        matriculaText.setText(scooterReservada.getCodigo() + " - Scooter Modelo 1");
+        matriculaText.setText(scooterReservada.getMatricula() + " - " + scooterReservada.getModelo());
 
         cambiarDistanciaScooter(scooterReservada, distanciaText);
 
@@ -670,9 +675,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
         for(Marker m : markers) {
             Scooter s = (Scooter) m.getTag();
-            if (s.getNoSerie().equals(scooterReservada.getNoSerie()))
+            if (s.getNoSerie().equals(scooterReservada.getNoSerie())) {
+                markerScooterReservada = m;
                 continue;
-
+            }
             m.setVisible(false);
         }
     }
@@ -711,6 +717,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     private void abrirEstadoNormal () {
         botonActualizar.setVisibility(View.VISIBLE);
+        markerScooterReservada=null;
 
         for (Marker m : markers) {
             m.setVisible(true);
@@ -753,7 +760,37 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             cronometro.finalizar();
 
         textViewTituloContador.setText(getContext().getString(R.string.alquiler_alquiler_titulo));
-        cronometro=new Cronometro(textViewContador, initTime);
+        cronometro=new Cronometro(textViewContador, initTime, new IOnSecondTick() {
+            @Override
+            public void onSecondTick() {
+                final Scooter scooter = scooterViewModel.getScooterReservada();
+                if (!actualizandoPosition && scooter!=null) {
+                    actualizandoPosition=true;
+
+                    Map<String,String> parametros = new HashMap<>();
+                    parametros.put("noSerie", scooter.getNoSerie());
+                    ConectorTCP.getInstance().realizarConexion(getActivity(), "getPosicionScooter", parametros, new CallbackRespuesta() {
+                        @Override
+                        public void success(Map<String, String> contenido) {
+                            actualizandoPosition=false;
+
+                            LatLng position = new LatLng(Double.parseDouble(contenido.get("latitud")), Double.parseDouble(contenido.get("longitud")));
+
+                            if (markerScooterReservada!=null)
+                                markerScooterReservada.setPosition(position);
+
+                            scooter.setPosicion(position);
+                        }
+
+                        @Override
+                        public void error(Map<String, String> contenido, Util.CODIGO codigoError) {
+                            Log.e("Error map", "No se ha podido actualizar la scooter");
+                            actualizandoPosition=false;
+                        }
+                    }, false);
+                }
+            }
+        });
         cronometro.ejecutar();
     }
 

@@ -38,12 +38,12 @@ public class ParteIncidenciaFragment extends Fragment {
     private EditText editDescripcion;
     private Button botonEnviar;
 
-    //TODO: Meter en un viewModel
     private int tipoIncidencia;
     private Integer codigoScooter;
     private LatLng clientePosicion;
 
     private MenuActivity menuActivity;
+    private ScooterViewModel scooterViewModel;
 
     private boolean creado = false;
 
@@ -57,6 +57,7 @@ public class ParteIncidenciaFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_incidencia_contenido, container, false);
 
         menuActivity = (MenuActivity) getActivity();
+        scooterViewModel = ViewModelProviders.of(getActivity()).get(ScooterViewModel.class);
 
         textoTitulo = root.findViewById(R.id.tituloIncidencia);
         linearCodigo = root.findViewById(R.id.linearCodigo);
@@ -101,12 +102,18 @@ public class ParteIncidenciaFragment extends Fragment {
         });
 
         creado=true;
-        generarParte();
+        // Si ya estuviera de antes lo vuelve a consigurar
+        if (scooterViewModel.getCodigoScooter()!=null)
+            configurarParte(scooterViewModel.getTipoIncidencia(), scooterViewModel.getCodigoScooter());
+        else
+            generarParte();
 
         return root;
     }
 
     private void generarParte() {
+        scooterViewModel.setParteIncidencia(tipoIncidencia, codigoScooter);
+
         linearCodigo.setVisibility(codigoScooter!=null?View.GONE:View.VISIBLE);
         editCodigo.setText(codigoScooter!=null?codigoScooter.toString():"");
 
@@ -127,8 +134,9 @@ public class ParteIncidenciaFragment extends Fragment {
         this.tipoIncidencia = codigoParte;
         this.codigoScooter = codigoScooter;
 
-        if (creado)
+        if (creado) {
             generarParte();
+        }
     }
 
     public void configurarParteWithPosition (int codigoParte, LatLng clientePosicion) {
@@ -139,6 +147,7 @@ public class ParteIncidenciaFragment extends Fragment {
     public void cerrarParte () {
         // Cerramos este fragment y volvemos al fragment de incidencias
         menuActivity.mostrarFragmentByTag("incidencia", false);
+        scooterViewModel.removeParteIncidencia();
     }
 
     private void enviarParte () {
